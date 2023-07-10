@@ -40,7 +40,6 @@ class _MapPageState extends State<MapPage> {
     locationSubscription = Geolocator.getPositionStream().listen((position) {
       final appLatLong =
           AppLatLong(lat: position.latitude, long: position.longitude);
-      _moveToCurrentLocation(appLatLong);
       _updateUserLocationMarker(appLatLong);
     });
   }
@@ -57,9 +56,7 @@ class _MapPageState extends State<MapPage> {
     _startLocationUpdates();
   }
 
-  Future<void> _moveToCurrentLocation(
-    AppLatLong appLatLong,
-  ) async {
+  Future<void> _moveToCurrentLocation(AppLatLong appLatLong) async {
     (await mapControllerCompleter.future).moveCamera(
       animation: const MapAnimation(type: MapAnimationType.linear, duration: 1),
       CameraUpdate.newCameraPosition(
@@ -68,14 +65,13 @@ class _MapPageState extends State<MapPage> {
             latitude: appLatLong.lat,
             longitude: appLatLong.long,
           ),
-          zoom: 15,
+          zoom: 17,
         ),
       ),
     );
   }
 
   void _updateUserLocationMarker(AppLatLong appLatLong) {
-    final controller = mapControllerCompleter.future;
     MapObjectId mapObjectId = const MapObjectId("userLocationMarker");
     if (userLocationMarker == null) {
       userLocationMarker = PlacemarkMapObject(
@@ -83,6 +79,9 @@ class _MapPageState extends State<MapPage> {
           latitude: appLatLong.lat,
           longitude: appLatLong.long,
         ),
+        icon: PlacemarkIcon.single(PlacemarkIconStyle(
+            image: BitmapDescriptor.fromAssetImage('lib/assets/user.png'),
+            rotationType: RotationType.rotate)),
         mapId: mapObjectId,
       );
       setState(() {
@@ -105,14 +104,123 @@ class _MapPageState extends State<MapPage> {
     super.dispose();
   }
 
+  void _zoomIn() async {
+    YandexMapController controller = await mapControllerCompleter.future;
+    controller.moveCamera(CameraUpdate.zoomIn(),
+        animation: const MapAnimation(duration: 0.5));
+  }
+
+  void _zoomOut() async {
+    YandexMapController controller = await mapControllerCompleter.future;
+    controller.moveCamera(CameraUpdate.zoomOut(),
+        animation: const MapAnimation(duration: 0.5));
+  }
+
+  void _currentLocation() async {
+    YandexMapController controller = await mapControllerCompleter.future;
+    Position currentPosition = await Geolocator.getCurrentPosition();
+    AppLatLong userLocation = AppLatLong(
+      lat: currentPosition.latitude,
+      long: currentPosition.longitude,
+    );
+    controller.moveCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target: Point(
+              latitude: userLocation.lat,
+              longitude: userLocation.long,
+            ),
+          ),
+        ),
+        animation: const MapAnimation(duration: 1));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: YandexMap(
-          onMapCreated: (controller) {
-            mapControllerCompleter.complete(controller);
-          },
+        child: Stack(
+          children: [
+            YandexMap(
+              onMapCreated: (controller) {
+                mapControllerCompleter.complete(controller);
+              },
+              mapObjects: placemarks,
+              logoAlignment: const MapAlignment(
+                  horizontal: HorizontalAlignment.left,
+                  vertical: VerticalAlignment.bottom),
+            ),
+            /*Align(
+              alignment: Alignment.topLeft,
+              child: Container(
+                margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    FloatingActionButton(
+                      onPressed: () {
+                        // Handle button 1 press
+                      },
+                      child: const Icon(Icons.search),
+                    ),
+                    const SizedBox(width: 100, child: TextField())
+                  ],
+                ),
+              ),
+            ),*/
+            Align(
+              alignment: Alignment.topRight,
+              child: Container(
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                width: 50,
+                height: 50,
+                child: RawMaterialButton(
+                  onPressed: _currentLocation,
+                  fillColor: Colors.white70,
+                  child: const Icon(Icons.my_location_sharp),
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Container(
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.all(2),
+                      width: 50,
+                      height: 50,
+                      child: RawMaterialButton(
+                        onPressed: _zoomIn,
+                        fillColor: Colors.white70,
+                        child: const Icon(
+                          Icons.add,
+                          color: Colors.black54,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.all(2),
+                      width: 50,
+                      height: 50,
+                      child: RawMaterialButton(
+                        onPressed: _zoomOut,
+                        fillColor: Colors.white70,
+                        child: const Icon(
+                          Icons.remove,
+                          color: Colors.black54,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
