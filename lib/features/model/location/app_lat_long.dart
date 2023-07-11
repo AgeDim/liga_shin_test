@@ -6,6 +6,13 @@ class AppLatLong {
     required this.lat,
     required this.long,
   });
+
+  factory AppLatLong.fromJson(Map<String, dynamic> json) {
+    return AppLatLong(
+      lat: double.parse(json["lat"]),
+      long: double.parse(json["long"]),
+    );
+  }
 }
 
 class MoscowLocation extends AppLatLong {

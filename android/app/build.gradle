@@ -45,7 +45,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.liga_shin_test"
-        minSdkVersion 31
+        minSdkVersion 30
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName

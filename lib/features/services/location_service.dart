@@ -1,7 +1,7 @@
 import 'package:geolocator/geolocator.dart';
 
-import '../location/app_lat_long.dart';
-import '../location/app_location.dart';
+import '../model/location/app_lat_long.dart';
+import '../model/location/app_location.dart';
 
 
 class LocationService implements AppLocation {

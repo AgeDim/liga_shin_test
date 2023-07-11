@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:liga_shin_test/features/contact_page/contact_page.dart';
+import 'package:liga_shin_test/features/promo_page/promo_page.dart';
+import 'package:liga_shin_test/features/start_page/start_page.dart';
 
 import 'features/main_page/main_page.dart';
-import 'features/map_page/map_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,14 +20,14 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      locale: const Locale('ru', 'RU'),
       debugShowCheckedModeBanner: false,
-      initialRoute: MainPage.routeName,
+      initialRoute: StartPage.routeName,
       routes: {
-        MapPage.routeName: (context) => const MapPage(),
         MainPage.routeName: (context) => const MainPage(),
+        StartPage.routeName: (context) => const StartPage(),
+        PromoPage.routeName: (context) => const PromoPage(),
+        ContactPage.routeName: (context) => const ContactPage(),
       },
     );
   }
 }
-

@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
-import '../location/app_lat_long.dart';
-import '../services/location_service.dart';
+import '../../model/location/app_lat_long.dart';
+import '../../services/location_service.dart';
 
 class MapPage extends StatefulWidget {
-  static const routeName = '/mapPage';
+  final List<dynamic> points;
 
-  const MapPage({super.key});
+  const MapPage({super.key, required this.points});
 
   @override
   State<MapPage> createState() => _MapPageState();
@@ -79,9 +79,11 @@ class _MapPageState extends State<MapPage> {
           latitude: appLatLong.lat,
           longitude: appLatLong.long,
         ),
-        icon: PlacemarkIcon.single(PlacemarkIconStyle(
-            image: BitmapDescriptor.fromAssetImage('lib/assets/user.png'),
-            rotationType: RotationType.rotate)),
+        icon: PlacemarkIcon.single(
+          PlacemarkIconStyle(
+              image: BitmapDescriptor.fromAssetImage('lib/assets/user.png'),
+              rotationType: RotationType.rotate, scale: 1.3),
+        ),
         mapId: mapObjectId,
       );
       setState(() {
@@ -132,7 +134,25 @@ class _MapPageState extends State<MapPage> {
             ),
           ),
         ),
-        animation: const MapAnimation(duration: 1));
+        animation: const MapAnimation(duration: 0.5));
+  }
+
+  void _addAllPointToMap() {
+    for (var point in widget.points) {
+      final placemark = PlacemarkMapObject(
+          point: Point(
+            latitude: point.coordinates.lat,
+            longitude: point.coordinates.long,
+          ),
+          icon: PlacemarkIcon.single(PlacemarkIconStyle(
+              image: BitmapDescriptor.fromAssetImage('lib/assets/point.png'),
+              rotationType: RotationType.rotate, scale: 1.3)),
+          mapId: MapObjectId(point.name),
+          opacity: 1);
+      setState(() {
+        placemarks.add(placemark);
+      });
+    }
   }
 
   @override
@@ -143,8 +163,10 @@ class _MapPageState extends State<MapPage> {
           children: [
             YandexMap(
               onMapCreated: (controller) {
+                _addAllPointToMap();
                 mapControllerCompleter.complete(controller);
               },
+              scrollGesturesEnabled: true,
               mapObjects: placemarks,
               logoAlignment: const MapAlignment(
                   horizontal: HorizontalAlignment.left,
@@ -173,8 +195,8 @@ class _MapPageState extends State<MapPage> {
               child: Container(
                 margin:
                     const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                width: 50,
-                height: 50,
+                width: 40,
+                height: 40,
                 child: RawMaterialButton(
                   onPressed: _currentLocation,
                   fillColor: Colors.white70,
@@ -192,8 +214,8 @@ class _MapPageState extends State<MapPage> {
                   children: [
                     Container(
                       margin: const EdgeInsets.all(2),
-                      width: 50,
-                      height: 50,
+                      width: 40,
+                      height: 40,
                       child: RawMaterialButton(
                         onPressed: _zoomIn,
                         fillColor: Colors.white70,
@@ -205,8 +227,8 @@ class _MapPageState extends State<MapPage> {
                     ),
                     Container(
                       margin: const EdgeInsets.all(2),
-                      width: 50,
-                      height: 50,
+                      width: 40,
+                      height: 40,
                       child: RawMaterialButton(
                         onPressed: _zoomOut,
                         fillColor: Colors.white70,
