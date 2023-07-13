@@ -153,7 +153,7 @@ class _MainPageState extends State<MainPage>
                 Builder(builder: (BuildContext context) {
                   return MapPage(
                     points: serviceStations,
-                    targetPlacemark: placemark,
+                    targetPlacemark: placemark,updatePlacemark: updateTargetPlacemark,
                   );
                 })
               ],

@@ -11,9 +11,13 @@ import '../../services/location_service.dart';
 class MapPage extends StatefulWidget {
   final List<dynamic> points;
   final dynamic targetPlacemark;
+  final void Function(dynamic) updatePlacemark;
 
   const MapPage(
-      {super.key, required this.points, required this.targetPlacemark});
+      {super.key,
+      required this.points,
+      required this.targetPlacemark,
+      required this.updatePlacemark});
 
   @override
   State<MapPage> createState() => _MapPageState();
@@ -30,7 +34,10 @@ class _MapPageState extends State<MapPage> {
   @override
   void initState() {
     super.initState();
-    _initPermission().ignore();
+    if (widget.targetPlacemark == null) {
+      _initPermission().ignore();
+    }
+    _startLocationUpdates();
   }
 
   Future<void> _initPermission() async {
@@ -59,7 +66,6 @@ class _MapPageState extends State<MapPage> {
     if (widget.targetPlacemark == null) {
       _moveToCurrentLocation(location);
     }
-    _startLocationUpdates();
   }
 
   Future<void> _moveToCurrentLocation(AppLatLong appLatLong) async {
@@ -98,7 +104,7 @@ class _MapPageState extends State<MapPage> {
       });
     } else {
       final index = placemarks.indexWhere((marker) =>
-          marker.mapId.toString() == userLocationMarker!.mapId.toString());
+          marker.mapId.value == userLocationMarker!.mapId.value);
       if (index >= 0) {
         setState(() {
           placemarks[index] = userLocationMarker!;
@@ -154,7 +160,7 @@ class _MapPageState extends State<MapPage> {
     return widget.points.where((station) => station.name == name).first;
   }
 
-  MapObject getPlaceMarkByName(String name){
+  MapObject getPlaceMarkByName(String name) {
     return placemarks.where((mapObject) => mapObject.mapId.value == name).first;
   }
 
@@ -190,10 +196,17 @@ class _MapPageState extends State<MapPage> {
           children: [
             YandexMap(
               onMapCreated: (controller) {
+                controller.moveCamera(CameraUpdate.newCameraPosition(
+                    const CameraPosition(
+                        target: Point(
+                            latitude: 55.7522200, longitude: 37.6155600), zoom: 5)));
                 _addAllPointToMap();
+                mapControllerCompleter.complete(controller);
                 if (widget.targetPlacemark != null) {
                   setState(() {
-                    selectedPlacemark = getPlaceMarkByName(widget.targetPlacemark.name) as PlacemarkMapObject?;
+                    selectedPlacemark =
+                        getPlaceMarkByName(widget.targetPlacemark.name)
+                            as PlacemarkMapObject?;
                   });
                   controller.moveCamera(CameraUpdate.newCameraPosition(
                     CameraPosition(
@@ -204,7 +217,6 @@ class _MapPageState extends State<MapPage> {
                         zoom: 15),
                   ));
                 }
-                mapControllerCompleter.complete(controller);
               },
               scrollGesturesEnabled: true,
               mapObjects: placemarks,
