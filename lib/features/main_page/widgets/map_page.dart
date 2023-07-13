@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:liga_shin_test/features/main_page/widgets/selected_placemark_card.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
 import '../../model/location/app_lat_long.dart';
@@ -9,8 +10,10 @@ import '../../services/location_service.dart';
 
 class MapPage extends StatefulWidget {
   final List<dynamic> points;
+  final dynamic targetPlacemark;
 
-  const MapPage({super.key, required this.points});
+  const MapPage(
+      {super.key, required this.points, required this.targetPlacemark});
 
   @override
   State<MapPage> createState() => _MapPageState();
@@ -22,6 +25,7 @@ class _MapPageState extends State<MapPage> {
   StreamSubscription<Position>? locationSubscription;
   PlacemarkMapObject? userLocationMarker;
   List<MapObject> placemarks = [];
+  PlacemarkMapObject? selectedPlacemark;
 
   @override
   void initState() {
@@ -52,7 +56,9 @@ class _MapPageState extends State<MapPage> {
     } catch (_) {
       location = defLocation;
     }
-    _moveToCurrentLocation(location);
+    if (widget.targetPlacemark == null) {
+      _moveToCurrentLocation(location);
+    }
     _startLocationUpdates();
   }
 
@@ -75,17 +81,18 @@ class _MapPageState extends State<MapPage> {
     MapObjectId mapObjectId = const MapObjectId("userLocationMarker");
     if (userLocationMarker == null) {
       userLocationMarker = PlacemarkMapObject(
-        point: Point(
-          latitude: appLatLong.lat,
-          longitude: appLatLong.long,
-        ),
-        icon: PlacemarkIcon.single(
-          PlacemarkIconStyle(
-              image: BitmapDescriptor.fromAssetImage('lib/assets/user.png'),
-              rotationType: RotationType.rotate, scale: 1.3),
-        ),
-        mapId: mapObjectId,
-      );
+          point: Point(
+            latitude: appLatLong.lat,
+            longitude: appLatLong.long,
+          ),
+          icon: PlacemarkIcon.single(
+            PlacemarkIconStyle(
+                image: BitmapDescriptor.fromAssetImage('lib/assets/user.png'),
+                rotationType: RotationType.rotate,
+                scale: 1.3),
+          ),
+          mapId: mapObjectId,
+          opacity: 1);
       setState(() {
         placemarks.add(userLocationMarker!);
       });
@@ -98,6 +105,12 @@ class _MapPageState extends State<MapPage> {
         });
       }
     }
+  }
+
+  void close() {
+    setState(() {
+      selectedPlacemark = null;
+    });
   }
 
   @override
@@ -137,6 +150,14 @@ class _MapPageState extends State<MapPage> {
         animation: const MapAnimation(duration: 0.5));
   }
 
+  dynamic getServiceStationByName(String name) {
+    return widget.points.where((station) => station.name == name).first;
+  }
+
+  MapObject getPlaceMarkByName(String name){
+    return placemarks.where((mapObject) => mapObject.mapId.value == name).first;
+  }
+
   void _addAllPointToMap() {
     for (var point in widget.points) {
       final placemark = PlacemarkMapObject(
@@ -144,9 +165,15 @@ class _MapPageState extends State<MapPage> {
             latitude: point.coordinates.lat,
             longitude: point.coordinates.long,
           ),
+          onTap: (placemark, point) {
+            setState(() {
+              selectedPlacemark = placemark;
+            });
+          },
           icon: PlacemarkIcon.single(PlacemarkIconStyle(
               image: BitmapDescriptor.fromAssetImage('lib/assets/point.png'),
-              rotationType: RotationType.rotate, scale: 1.3)),
+              rotationType: RotationType.rotate,
+              scale: 1.3)),
           mapId: MapObjectId(point.name),
           opacity: 1);
       setState(() {
@@ -164,6 +191,19 @@ class _MapPageState extends State<MapPage> {
             YandexMap(
               onMapCreated: (controller) {
                 _addAllPointToMap();
+                if (widget.targetPlacemark != null) {
+                  setState(() {
+                    selectedPlacemark = getPlaceMarkByName(widget.targetPlacemark.name) as PlacemarkMapObject?;
+                  });
+                  controller.moveCamera(CameraUpdate.newCameraPosition(
+                    CameraPosition(
+                        target: Point(
+                          latitude: widget.targetPlacemark.coordinates.lat,
+                          longitude: widget.targetPlacemark.coordinates.long,
+                        ),
+                        zoom: 15),
+                  ));
+                }
                 mapControllerCompleter.complete(controller);
               },
               scrollGesturesEnabled: true,
@@ -245,6 +285,13 @@ class _MapPageState extends State<MapPage> {
           ],
         ),
       ),
+      bottomNavigationBar: selectedPlacemark != null
+          ? Card(
+              child: SelectedPlacemarkCard(
+              point: getServiceStationByName(selectedPlacemark!.mapId.value),
+              close: close,
+            ))
+          : null,
     );
   }
 }

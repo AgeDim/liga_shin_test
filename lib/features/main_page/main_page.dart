@@ -32,7 +32,6 @@ class _MainPageState extends State<MainPage>
 
   @override
   Widget build(BuildContext context) {
-
     List<ServiceStation> serviceStations = [
       ServiceStation(
         name: "Промзона ПАРНАС",
@@ -105,6 +104,16 @@ class _MainPageState extends State<MainPage>
         number: "+79000000009",
       ),
     ];
+
+    dynamic placemark;
+
+    void updateTargetPlacemark(dynamic mark) {
+      _tabController.index = 1;
+      setState(() {
+        placemark = mark;
+      });
+    }
+
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(kToolbarHeight),
@@ -138,9 +147,15 @@ class _MainPageState extends State<MainPage>
               controller: _tabController,
               children: [
                 DataPage(
-                  points: serviceStations
+                  points: serviceStations,
+                  updatePlacemark: updateTargetPlacemark,
                 ),
-                MapPage(points: serviceStations)
+                Builder(builder: (BuildContext context) {
+                  return MapPage(
+                    points: serviceStations,
+                    targetPlacemark: placemark,
+                  );
+                })
               ],
             ),
           ),

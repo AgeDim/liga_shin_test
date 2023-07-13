@@ -13,6 +13,11 @@ class AppLatLong {
       long: double.parse(json["long"]),
     );
   }
+
+  @override
+  String toString() {
+    return 'GPS координаты: $lat, $long';
+  }
 }
 
 class MoscowLocation extends AppLatLong {
