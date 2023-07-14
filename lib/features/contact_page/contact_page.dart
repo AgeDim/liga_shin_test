@@ -16,16 +16,12 @@ class ContactPage extends StatelessWidget {
   }
 
   void _sendEmail(String email) async {
-    final Uri _emailLaunchUri = Uri(
+    final Uri emailLaunchUri = Uri(
       scheme: 'mailto',
       path: email,
-      queryParameters: {
-        'subject': 'Hello from Flutter',
-        'body': 'This is a test email from my Flutter app.',
-      },
     );
 
-    final urlString = _emailLaunchUri.toString();
+    final urlString = emailLaunchUri.toString();
     if (await canLaunch(urlString)) {
       await launch(urlString);
     } else {
