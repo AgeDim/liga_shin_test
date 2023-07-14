@@ -196,12 +196,12 @@ class _MapPageState extends State<MapPage> {
           children: [
             YandexMap(
               onMapCreated: (controller) {
+                mapControllerCompleter.complete(controller);
                 controller.moveCamera(CameraUpdate.newCameraPosition(
                     const CameraPosition(
                         target: Point(
                             latitude: 55.7522200, longitude: 37.6155600), zoom: 5)));
                 _addAllPointToMap();
-                mapControllerCompleter.complete(controller);
                 if (widget.targetPlacemark != null) {
                   setState(() {
                     selectedPlacemark =
