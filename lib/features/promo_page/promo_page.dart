@@ -41,7 +41,7 @@ class _PromoPageState extends State<PromoPage> {
       appBar: AppBar(
         backgroundColor: Colors.lime,
         title: const Text(
-          "Контакты",
+          "Промо",
           style: TextStyle(color: Colors.black),
         ),
         iconTheme: const IconThemeData(color: Colors.black),
