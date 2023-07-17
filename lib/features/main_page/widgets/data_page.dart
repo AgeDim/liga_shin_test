@@ -119,74 +119,77 @@ class _DataPageState extends State<DataPage> {
                         ],
                       ),
                     ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Container(
-                            margin: const EdgeInsets.only(right: 10),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                gradient: StyleLibrary.gradient.button),
-                            child: ElevatedButton(
-                              onPressed: () {
-                                _launchNavigation(widget.points[index]);
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.transparent,
-                                shadowColor: Colors.transparent,
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text('Поехали'),
-                                  SizedBox(
-                                    width: 25,
-                                    height: 25,
-                                    child: ClipPath(
-                                      clipper: DiamondClipper(),
-                                      child: Container(
-                                        color: Colors.amberAccent,
-                                        child: const Icon(
-                                          Icons.turn_right,
-                                          color: Colors.red,
-                                          size: 23,
+                    SizedBox(
+                      height: 40,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              margin: const EdgeInsets.only(right: 10),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  gradient: StyleLibrary.gradient.button),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  _launchNavigation(widget.points[index]);
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.transparent,
+                                  shadowColor: Colors.transparent,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text('Поехали'),
+                                    SizedBox(
+                                      width: 25,
+                                      height: 25,
+                                      child: ClipPath(
+                                        clipper: DiamondClipper(),
+                                        child: Container(
+                                          color: Colors.amberAccent,
+                                          child: const Icon(
+                                            Icons.turn_right,
+                                            color: Colors.red,
+                                            size: 23,
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        Expanded(
-                          child: Container(
-                            margin: const EdgeInsets.only(left: 10),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                gradient: StyleLibrary.gradient.button),
-                            child: ElevatedButton(
-                              onPressed: () {
-                                widget.updatePlacemark(widget.points[index]);
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.transparent,
-                                shadowColor: Colors.transparent,
-                              ),
-                              child: const Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Icon(Icons.directions_car_sharp,
-                                      color: Colors.black87),
-                                  Text('На карте')
-                                ],
+                          Expanded(
+                            child: Container(
+                              margin: const EdgeInsets.only(left: 10),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  gradient: StyleLibrary.gradient.button),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  widget.updatePlacemark(widget.points[index]);
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.transparent,
+                                  shadowColor: Colors.transparent,
+                                ),
+                                child: const Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Icon(Icons.directions_car_sharp,
+                                        color: Colors.black87),
+                                    Text('На карте')
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        )
-                      ],
+                          )
+                        ],
+                      ),
                     )
                   ],
                 ),

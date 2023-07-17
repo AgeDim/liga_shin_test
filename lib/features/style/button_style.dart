@@ -9,11 +9,20 @@ class CustomButtonStyle {
         ),
       ));
   ButtonStyle? blueButton = ButtonStyle(
-    elevation: MaterialStateProperty.all<double>(0),
+      elevation: MaterialStateProperty.all<double>(0),
       backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
         RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(25),
+        ),
+      ));
+  ButtonStyle? whiteWithRedBorder = ButtonStyle(
+      elevation: MaterialStateProperty.all<double>(0),
+      backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+        RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(25),
+          side: BorderSide(width: 2, color: Colors.red),
         ),
       ));
 }

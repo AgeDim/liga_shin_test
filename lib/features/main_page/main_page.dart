@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:liga_shin_test/features/main_page/widgets/map_page.dart';
 import 'package:liga_shin_test/features/model/location/app_lat_long.dart';
 import 'package:liga_shin_test/features/model/service_station.dart';
+import 'package:liga_shin_test/features/style/style_lybrary.dart';
 
 import 'widgets/data_page.dart';
 
@@ -17,17 +18,141 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  bool _showFab = true;
+  int? sort = 0;
+
+  void _handleTabChange() {
+    if (_tabController.index == 0) {
+      setState(() {
+        _showFab = true;
+      });
+    } else {
+      setState(() {
+        _showFab = false;
+      });
+    }
+  }
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(_handleTabChange);
   }
 
   @override
   void dispose() {
+    _tabController.removeListener(_handleTabChange);
     _tabController.dispose();
     super.dispose();
+  }
+
+  void _showCustomModal(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isDismissible: false,
+      enableDrag: false,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return Container(
+              height: 200,
+              color: Colors.white,
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text('Сортировка:'),
+                    Column(
+                      children: [
+                        RadioListTile(
+                          contentPadding: const EdgeInsets.all(0),
+                          title: Text("по расстоянию от Москвы"),
+                          value: 0,
+                          groupValue: sort,
+                          onChanged: (value) {
+                            setState(() {
+                              sort = value;
+                            });
+                          },
+                        ),
+                        RadioListTile(
+                          contentPadding: const EdgeInsets.all(0),
+                          title: Text("от ближайшего"),
+                          value: 1,
+                          groupValue: sort,
+                          onChanged: (value) {
+                            setState(() {
+                              sort = value;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                    Text('Фильтр по трассам:'),
+                    SizedBox(
+                      height: 50,
+                      child: Container(
+                        margin: const EdgeInsets.all(7),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15),
+                                  border: Border.all(
+                                    color: Colors.red,
+                                    width: 2.0,
+                                  ),
+                                ),
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 5),
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.transparent,
+                                    shadowColor: Colors.transparent,
+                                  ),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text(
+                                    'Отмена',
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15),
+                                    gradient: StyleLibrary.gradient.button),
+                                margin: EdgeInsets.symmetric(horizontal: 5),
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.transparent,
+                                    shadowColor: Colors.transparent,
+                                  ),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('Применить'),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
   @override
@@ -153,7 +278,8 @@ class _MainPageState extends State<MainPage>
                 Builder(builder: (BuildContext context) {
                   return MapPage(
                     points: serviceStations,
-                    targetPlacemark: placemark,updatePlacemark: updateTargetPlacemark,
+                    targetPlacemark: placemark,
+                    updatePlacemark: updateTargetPlacemark,
                   );
                 })
               ],
@@ -161,6 +287,14 @@ class _MainPageState extends State<MainPage>
           ),
         ],
       ),
+      floatingActionButton: _showFab
+          ? FloatingActionButton(
+              onPressed: () {
+                _showCustomModal(context);
+              },
+              child: const Icon(Icons.vertical_distribute_outlined),
+            )
+          : null,
     );
   }
 }
