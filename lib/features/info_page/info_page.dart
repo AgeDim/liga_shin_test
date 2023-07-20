@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:liga_shin_test/features/model/shimont.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../main_page/widgets/diamondClipper.dart';
 import '../style/style_lybrary.dart';
 
 class InfoPage extends StatelessWidget {
-  final dynamic point;
+  final Data point;
 
   const InfoPage({super.key, required this.point});
 
-  Future<void> _launchNavigation(dynamic st) async {
-    final url = 'geo:${st.coordinates.lat},${st.coordinates.long}';
+  Future<void> _launchNavigation(Data st) async {
+    final url =
+        'geo:${double.parse(point.tvCoords.split(',')[0])},${double.parse(point.tvCoords.split(',')[1])}';
     if (await canLaunch(url)) {
       await launch(url, forceSafariVC: false);
     } else {
@@ -24,7 +26,7 @@ class InfoPage extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          point.name,
+          point.pageTitle,
           style: const TextStyle(color: Colors.black),
         ),
         backgroundColor: Colors.lime,
@@ -43,7 +45,7 @@ class InfoPage extends StatelessWidget {
               child: Column(
                 children: [
                   Text(
-                    point.name,
+                    point.pageTitle,
                     style: const TextStyle(
                         fontWeight: FontWeight.bold, fontSize: 15),
                   ),
@@ -54,7 +56,7 @@ class InfoPage extends StatelessWidget {
                         child: const Icon(Icons.home),
                       ),
                       Expanded(
-                        child: Text(point.address),
+                        child: Text(point.tvAddress),
                       ),
                     ],
                   )
@@ -65,7 +67,7 @@ class InfoPage extends StatelessWidget {
               margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
               child: Row(
                 children: [
-                  if (point.place != null)
+                  if (point.tvTrass != null)
                     Container(
                       padding: const EdgeInsets.all(7),
                       margin: const EdgeInsets.only(right: 10),
@@ -74,7 +76,7 @@ class InfoPage extends StatelessWidget {
                         borderRadius: BorderRadius.all(Radius.circular(25)),
                       ),
                       child: Text(
-                        '${point.place}',
+                        '${point.tvTrass}',
                         style: const TextStyle(color: Colors.white),
                       ),
                     ),
@@ -84,7 +86,7 @@ class InfoPage extends StatelessWidget {
             Container(
               alignment: Alignment.centerLeft,
               margin: const EdgeInsets.all(15),
-              child: Text(point.coordinates.toString()),
+              child: Text(point.tvCoords),
             ),
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 15),
