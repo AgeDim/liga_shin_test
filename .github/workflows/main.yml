@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - master
+      - origin
+
 jobs:
   build:
     runs-on: ubuntu-latest
