@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:liga_shin_test/features/contact_page/contact_page.dart';
 import 'package:liga_shin_test/features/model/provider_shimont.dart';
-import 'package:liga_shin_test/features/style/style_lybrary.dart';
+import 'package:liga_shin_test/features/style/style_library.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
@@ -52,130 +52,148 @@ class _StartPageState extends State<StartPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Table(
-              columnWidths: const {
-                0: FlexColumnWidth(1),
-                1: FlexColumnWidth(1),
-              },
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                TableRow(
-                  children: [
-                    TableCell(
-                      child: Container(
-                        margin: const EdgeInsets.only(left: 20, right: 10),
-                        child: ElevatedButton(
-                          style: StyleLibrary.button.defaultButton,
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const MapPage(type: "shimont")));
-                          },
-                          child: const Column(
+                Expanded(
+                  child: Container(
+                    margin: const EdgeInsets.only(left: 20, right: 10),
+                    child: ElevatedButton(
+                      style: StyleLibrary.button.defaultButton,
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const MapPage(type: "shimont")));
+                      },
+                      child: Column(
+                        children: [
+                          Text(
+                            'Шиномонтажи',
+                            style: StyleLibrary.text.black14,
+                          ),
+                          const Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              Text(
-                                'Шиномонтажи',
-                                style: TextStyle(color: Colors.black),
-                              ),
                               Icon(
                                 Icons.directions_car_sharp,
                                 color: Colors.black87,
-                              )
+                                size: 40,
+                              ),
                             ],
-                          ),
-                        ),
+                          )
+                        ],
                       ),
                     ),
-                    TableCell(
-                      child: Container(
-                        margin: const EdgeInsets.only(left: 10, right: 20),
-                        child: ElevatedButton(
-                          style: StyleLibrary.button.defaultButton,
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const MapPage(type: "carWashing")));
-                          },
-                          child: const Column(
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    margin: const EdgeInsets.only(left: 10, right: 20),
+                    child: ElevatedButton(
+                      style: StyleLibrary.button.defaultButton,
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const MapPage(type: "carWashing")));
+                      },
+                      child: Column(
+                        children: [
+                          Text(
+                            'Мойки',
+                            style: StyleLibrary.text.black14,
+                          ),
+                          const Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              Text(
-                                'Мойки',
-                                style: TextStyle(color: Colors.black),
-                              ),
                               Icon(
                                 Icons.local_car_wash_outlined,
                                 color: Colors.black87,
-                              )
+                                size: 40,
+                              ),
                             ],
-                          ),
-                        ),
+                          )
+                        ],
                       ),
                     ),
-                  ],
+                  ),
                 ),
-                TableRow(
-                  children: [
-                    TableCell(
-                      child: Container(
-                        margin: const EdgeInsets.only(left: 20, right: 10, top: 10),
-                        child: ElevatedButton(
-                          style: StyleLibrary.button.defaultButton,
-                          onPressed: () {
-                            Navigator.pushNamed(context, ContactPage.routeName);
-                          },
-                          child: const Column(
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Container(
+                    margin: const EdgeInsets.only(left: 20, right: 10, top: 10),
+                    child: ElevatedButton(
+                      style: StyleLibrary.button.defaultButton,
+                      onPressed: () {
+                        Navigator.pushNamed(context, ContactPage.routeName);
+                      },
+                      child: Column(
+                        children: [
+                          Text(
+                            'Контакты',
+                            style: StyleLibrary.text.black14,
+                          ),
+                          const Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              Text(
-                                'Контакты',
-                                style: TextStyle(color: Colors.black),
-                              ),
                               Icon(
                                 Icons.contact_mail_outlined,
                                 color: Colors.black87,
-                              )
+                                size: 40,
+                              ),
                             ],
-                          ),
-                        ),
+                          )
+                        ],
                       ),
                     ),
-                    TableCell(
-                      child: Container(
-                        margin: const EdgeInsets.only(left: 10, right: 20, top: 10),
-                        child: ElevatedButton(
-                          style: StyleLibrary.button.defaultButton,
-                          onPressed: () {
-                            Navigator.pushNamed(context, PromoPage.routeName);
-                          },
-                          child: const Column(
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    margin: const EdgeInsets.only(left: 10, right: 20, top: 10),
+                    child: ElevatedButton(
+                      style: StyleLibrary.button.defaultButton,
+                      onPressed: () {
+                        Navigator.pushNamed(context, PromoPage.routeName);
+                      },
+                      child: Column(
+                        children: [
+                          Text(
+                            'Промо',
+                            style: StyleLibrary.text.black14,
+                          ),
+                          const Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              Text(
-                                'Промо',
-                                style: TextStyle(color: Colors.black),
-                              ),
                               Icon(
                                 Icons.percent_outlined,
                                 color: Colors.black87,
-                              )
+                                size: 40,
+                              ),
                             ],
                           ),
-                        ),
+                        ],
                       ),
                     ),
-                  ],
+                  ),
                 ),
               ],
             ),
             Column(
               children: [
                 Container(
-                  margin: const EdgeInsets.all(20),
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 50, horizontal: 20),
                   child: Text(
-                    "Последнее обновление данных: ${formatDate(updatedTime)}",
-                    style: const TextStyle(fontSize: 15),
-                  ),
+                      "Последнее обновление данных: ${formatDate(updatedTime)}",
+                      style: StyleLibrary.text.black14),
                 ),
                 IconButton(
                     onPressed: () {
@@ -183,7 +201,7 @@ class _StartPageState extends State<StartPage> {
                           .updateLists();
                       _setUpdTime();
                     },
-                    icon: const Icon(Icons.refresh_outlined))
+                    icon: const Icon(Icons.refresh_rounded))
               ],
             ),
           ],

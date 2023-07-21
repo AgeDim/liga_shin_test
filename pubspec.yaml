@@ -44,4 +44,11 @@ flutter:
 
   assets:
     - lib/assets/
+  fonts:
+    - family: Montserrat
+      fonts:
+        - asset: lib/assets/fonts/Montserrat-Black.ttf
+    - family: Source Sans Pro
+      fonts:
+        - asset: lib/assets/fonts/SourceSansPro-SemiBold.ttf
 

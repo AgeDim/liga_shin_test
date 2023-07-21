@@ -3,7 +3,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../info_page/info_page.dart';
 import '../../model/shimont.dart';
-import '../../style/style_lybrary.dart';
+import '../../style/style_library.dart';
 import 'diamondClipper.dart';
 
 class SelectedPlacemarkCard extends StatelessWidget {
@@ -62,7 +62,7 @@ class SelectedPlacemarkCard extends StatelessWidget {
               children: [
                 if (point.tvTrass != null)
                   Container(
-                    padding: const EdgeInsets.all(7),
+                    padding: const EdgeInsets.all(10),
                     margin: const EdgeInsets.only(right: 10),
                     decoration: const BoxDecoration(
                       color: Colors.lightGreen,
@@ -74,18 +74,20 @@ class SelectedPlacemarkCard extends StatelessWidget {
                     ),
                   ),
                 if(point.tvDistance != null)
-                Container(
-                    padding: const EdgeInsets.all(7),
-                    margin: const EdgeInsets.only(right: 10),
-                    decoration: const BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.all(Radius.circular(25)),
+                Flexible(
+                  child: Container(
+                      padding: const EdgeInsets.all(10),
+                      margin: const EdgeInsets.only(right: 10),
+                      decoration: const BoxDecoration(
+                        color: Colors.blue,
+                        borderRadius: BorderRadius.all(Radius.circular(25)),
+                      ),
+                      child: Text(
+                        '${point.tvDistance} км от Москвы',
+                        style: const TextStyle(color: Colors.white),
+                      ),
                     ),
-                    child: Text(
-                      '${point.tvDistance} км от Москвы',
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                  ),
+                ),
               ],
             ),
           ),

@@ -1,4 +1,7 @@
 import 'dart:async';
+import 'dart:typed_data';
+import 'dart:ui';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -10,6 +13,7 @@ import '../model/location/app_lat_long.dart';
 import '../model/provider_shimont.dart';
 import '../model/shimont.dart';
 import '../services/location_service.dart';
+import '../style/style_library.dart';
 
 class MapPage extends StatefulWidget {
   static const routeName = '/mapPage';
@@ -27,13 +31,12 @@ class _MapPageState extends State<MapPage> {
   StreamSubscription<Position>? locationSubscription;
   PlacemarkMapObject? userLocationMarker;
   List<Data> points = [];
-  List<MapObject> placemarks = [];
+  final List<MapObject> placemarks = [];
   PlacemarkMapObject? selectedPlacemark;
 
   @override
   void initState() {
     super.initState();
-    _startLocationUpdates();
     _initPermission().ignore();
   }
 
@@ -42,6 +45,7 @@ class _MapPageState extends State<MapPage> {
       await LocationService().requestPermission();
     }
     await _fetchCurrentLocation();
+    _startLocationUpdates();
   }
 
   void _startLocationUpdates() {
@@ -60,10 +64,11 @@ class _MapPageState extends State<MapPage> {
     } catch (_) {
       location = defLocation;
     }
-    _moveToCurrentLocation(location);
+    _moveToCurrentLocation(location, 12);
   }
 
-  Future<void> _moveToCurrentLocation(AppLatLong appLatLong) async {
+  Future<void> _moveToCurrentLocation(
+      AppLatLong appLatLong, double zoom) async {
     (await mapControllerCompleter.future).moveCamera(
       animation: const MapAnimation(type: MapAnimationType.linear, duration: 1),
       CameraUpdate.newCameraPosition(
@@ -72,7 +77,7 @@ class _MapPageState extends State<MapPage> {
             latitude: appLatLong.lat,
             longitude: appLatLong.long,
           ),
-          zoom: 17,
+          zoom: zoom,
         ),
       ),
     );
@@ -120,6 +125,98 @@ class _MapPageState extends State<MapPage> {
     super.dispose();
   }
 
+  void findNearestPlacemark() async {
+    Point userPoint = userLocationMarker!.point;
+    double minDistance = double.infinity;
+    Data? nearestPlacemark;
+    for (var placemark in points) {
+      Point placemarkPoint = Point(
+          latitude: double.parse(placemark.tvCoords.split(',')[0]),
+          longitude: double.parse(placemark.tvCoords.split(',')[1]));
+
+      double lat1 = userPoint.latitude * math.pi / 180;
+      double lon1 = userPoint.longitude * math.pi / 180;
+      double lat2 = placemarkPoint.latitude * math.pi / 180;
+      double lon2 = placemarkPoint.longitude * math.pi / 180;
+
+      double distance = _calculateDistance(lat1, lon1, lat2, lon2);
+
+      if (distance < minDistance) {
+        minDistance = distance;
+        nearestPlacemark = placemark;
+      }
+    }
+    setState(() {
+      selectedPlacemark = PlacemarkMapObject(
+          mapId: MapObjectId(nearestPlacemark!.pageTitle),
+          point: Point(
+            latitude: double.parse(nearestPlacemark.tvCoords.split(',')[0]),
+            longitude: double.parse(nearestPlacemark.tvCoords.split(',')[1]),
+          ));
+    });
+    _moveToCurrentLocation(
+        AppLatLong(
+            lat: double.parse(nearestPlacemark!.tvCoords.split(',')[0]),
+            long: double.parse(nearestPlacemark.tvCoords.split(',')[1])),
+        14);
+  }
+
+  double _calculateDistance(
+      double lat1, double lon1, double lat2, double lon2) {
+    const double radius = 6371;
+
+    double dLat = lat2 - lat1;
+    double dLon = lon2 - lon1;
+
+    double a = math.sin(dLat / 2) * math.sin(dLat / 2) +
+        math.cos(lat1) *
+            math.cos(lat2) *
+            math.sin(dLon / 2) *
+            math.sin(dLon / 2);
+
+    double c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a));
+
+    double distance = radius * c;
+    return distance;
+  }
+
+  Future<Uint8List> _buildClusterAppearance(Cluster cluster) async {
+    final recorder = PictureRecorder();
+    final canvas = Canvas(recorder);
+    const size = Size(200, 200);
+    final fillPaint = Paint()
+      ..color = Colors.white
+      ..style = PaintingStyle.fill;
+    final strokePaint = Paint()
+      ..color = Colors.black
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 10;
+    const radius = 60.0;
+
+    final textPainter = TextPainter(
+        text: TextSpan(
+            text: cluster.size.toString(),
+            style: const TextStyle(color: Colors.black, fontSize: 50)),
+        textDirection: TextDirection.ltr);
+
+    textPainter.layout(minWidth: 0, maxWidth: size.width);
+
+    final textOffset = Offset((size.width - textPainter.width) / 2,
+        (size.height - textPainter.height) / 2);
+    final circleOffset = Offset(size.height / 2, size.width / 2);
+
+    canvas.drawCircle(circleOffset, radius, fillPaint);
+    canvas.drawCircle(circleOffset, radius, strokePaint);
+    textPainter.paint(canvas, textOffset);
+
+    final image = await recorder
+        .endRecording()
+        .toImage(size.width.toInt(), size.height.toInt());
+    final pngBytes = await image.toByteData(format: ImageByteFormat.png);
+
+    return pngBytes!.buffer.asUint8List();
+  }
+
   void _zoomIn() async {
     YandexMapController controller = await mapControllerCompleter.future;
     controller.moveCamera(CameraUpdate.zoomIn(),
@@ -151,7 +248,7 @@ class _MapPageState extends State<MapPage> {
         animation: const MapAnimation(duration: 0.5));
   }
 
-  dynamic getServiceStationByName(String pageTitle) {
+  Data getServiceStationByName(String pageTitle) {
     return points.where((station) => station.pageTitle == pageTitle).first;
   }
 
@@ -160,6 +257,7 @@ class _MapPageState extends State<MapPage> {
   }
 
   void _addAllPointToMap() {
+    List<PlacemarkMapObject> pl = [];
     for (var point in points) {
       final placemark = PlacemarkMapObject(
           point: Point(
@@ -177,11 +275,39 @@ class _MapPageState extends State<MapPage> {
               scale: 1.3)),
           mapId: MapObjectId(point.pageTitle),
           opacity: 1);
-      setState(() {
-        placemarks.add(placemark);
-      });
+      pl.add(placemark);
     }
+    final largeMapObject = ClusterizedPlacemarkCollection(
+      mapId: const MapObjectId('map'),
+      radius: 30,
+      minZoom: 15,
+      onClusterAdded:
+          (ClusterizedPlacemarkCollection self, Cluster cluster) async {
+        return cluster.copyWith(
+            appearance: cluster.appearance.copyWith(
+                opacity: 0.75,
+                icon: PlacemarkIcon.single(PlacemarkIconStyle(
+                    image: BitmapDescriptor.fromBytes(
+                        await _buildClusterAppearance(cluster)),
+                    scale: 1))));
+      },
+      placemarks: pl,
+      onClusterTap: (ClusterizedPlacemarkCollection self, Cluster cluster) {
+        _moveToCurrentLocation(
+            AppLatLong(
+                lat: cluster.appearance.point.latitude,
+                long: cluster.appearance.point.longitude),
+            self.zIndex);
+      },
+    );
+    setState(() {
+      placemarks.add(largeMapObject);
+    });
   }
+
+  /*_moveToCurrentLocation(AppLatLong(
+            lat: cluster.appearance.point.latitude,
+            long: cluster.appearance.point.longitude));*/
 
   @override
   Widget build(BuildContext context) {
@@ -212,24 +338,33 @@ class _MapPageState extends State<MapPage> {
                   horizontal: HorizontalAlignment.left,
                   vertical: VerticalAlignment.bottom),
             ),
-            /*Align(
+            Align(
               alignment: Alignment.topLeft,
               child: Container(
-                margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    FloatingActionButton(
-                      onPressed: () {
-                        // Handle button 1 press
-                      },
-                      child: const Icon(Icons.search),
-                    ),
-                    const SizedBox(width: 100, child: TextField())
-                  ],
+                height: 30,
+                margin: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    gradient: StyleLibrary.gradient.button),
+                child: ElevatedButton(
+                  onPressed: () {
+                    findNearestPlacemark();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                  ),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.search, color: Colors.amberAccent),
+                      Text('Найти ближайший'),
+                    ],
+                  ),
                 ),
               ),
-            ),*/
+            ),
             Align(
               alignment: Alignment.topRight,
               child: Container(

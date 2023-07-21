@@ -3,7 +3,7 @@ import 'package:liga_shin_test/features/model/shimont.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../main_page/widgets/diamondClipper.dart';
-import '../style/style_lybrary.dart';
+import '../style/style_library.dart';
 
 class InfoPage extends StatelessWidget {
   final Data point;
@@ -86,7 +86,7 @@ class InfoPage extends StatelessWidget {
             Container(
               alignment: Alignment.centerLeft,
               margin: const EdgeInsets.all(15),
-              child: Text(point.tvCoords),
+              child: Text("GPS координаты: ${point.tvCoords}"),
             ),
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 15),
