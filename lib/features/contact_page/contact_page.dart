@@ -214,6 +214,7 @@ class ContactPage extends StatelessWidget {
                                 horizontal: 10, vertical: 20),
                             child: GestureDetector(
                               onTap: () {
+                                //todo: Использовать константы
                                 _openWebsite('https://auto.shinliga.ru/shinomontazh');
                               },
                               child: const Text(

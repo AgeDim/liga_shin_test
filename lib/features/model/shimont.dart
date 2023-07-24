@@ -52,4 +52,13 @@ class Data {
       'tv.phonetv': tvPhonetv,
     };
   }
+
+  @override
+  String toString() {
+    return 'Data{id: $id, pagetitle: $pageTitle, '
+        'content: $content, image: $image, '
+        'thumb: $thumb, tv.address: $tvAddress, '
+        'tv.coords: $tvCoords, tv.trass: $tvTrass, '
+        'tv.distance: $tvDistance, tv.phonetv: $tvPhonetv}';
+  }
 }

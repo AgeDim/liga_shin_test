@@ -24,6 +24,7 @@ class _StartPageState extends State<StartPage> {
   String formatDate(String dateStr) {
     if (dateStr != "") {
       final parsedDateTime = DateTime.parse(dateStr);
+      //todo: Вынести в отсдельные стили
       final formatter = DateFormat("dd MMMM yyyy HH:mm", "ru");
       return formatter.format(parsedDateTime);
     }
@@ -64,6 +65,7 @@ class _StartPageState extends State<StartPage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
+                              //todo: Вынести в отдельные константы
                                 builder: (context) =>
                                     const MapPage(type: "shimont")));
                       },
@@ -98,6 +100,7 @@ class _StartPageState extends State<StartPage> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
+                                //todo: Вынести в отдельные константы
                                     const MapPage(type: "carWashing")));
                       },
                       child: Column(
@@ -197,6 +200,7 @@ class _StartPageState extends State<StartPage> {
                 ),
                 IconButton(
                     onPressed: () {
+                      //todo: использовать contex.watch() или context.read()
                       Provider.of<DataProvider>(context, listen: false)
                           .updateLists();
                       _setUpdTime();

@@ -23,6 +23,8 @@ class _PromoPageState extends State<PromoPage> {
       final email = _emailController.text;
       final carNumber = _carNumberController.text;
 
+
+      //todo: ПРИНТЫ
       print('Name: $name');
       print('Phone: $phone');
       print('Email: $email');
@@ -53,7 +55,8 @@ class _PromoPageState extends State<PromoPage> {
               Container(
                 margin: const EdgeInsets.all(20),
                 child: const Text(
-                  'Скоро мы запустим бонусную программу для постоянных клиентов. Чтобы быть одним из первых оставьте, пожалуйста, свои контактные данные.',
+                  'Скоро мы запустим бонусную программу для постоянных клиентов. '
+                      'Чтобы быть одним из первых оставьте, пожалуйста, свои контактные данные.',
                   style: TextStyle(fontSize: 15),
                 ),
               ),

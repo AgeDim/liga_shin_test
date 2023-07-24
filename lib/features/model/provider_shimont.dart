@@ -15,6 +15,7 @@ class DataProvider with ChangeNotifier {
   static const String lastUpdateKey = 'lastUpdate';
 
   DataProvider() {
+    //todo:  Скорее всего тут вылезет ошибка, читай ниже
     _initData();
   }
 
@@ -23,6 +24,8 @@ class DataProvider with ChangeNotifier {
   List<Data> get carWashing => _carWashing;
 
   void _initData() async {
+
+
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String>? firstListString = prefs.getStringList(firstListKey);
     List<String>? secondListString = prefs.getStringList(secondListKey);
@@ -35,6 +38,7 @@ class DataProvider with ChangeNotifier {
           .map((jsonString) => Data.fromJson(jsonDecode(jsonString)))
           .toList();
     }
+    //todo: Перерисовка до начала отрисовки, в проде приложение из-за этого может зависнуть
     notifyListeners();
   }
 
