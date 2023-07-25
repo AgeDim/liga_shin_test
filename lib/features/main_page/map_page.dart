@@ -85,31 +85,27 @@ class _MapPageState extends State<MapPage> {
 
   void _updateUserLocationMarker(AppLatLong appLatLong) {
     MapObjectId mapObjectId = const MapObjectId("userLocationMarker");
-    if (userLocationMarker == null) {
-      userLocationMarker = PlacemarkMapObject(
-          point: Point(
-            latitude: appLatLong.lat,
-            longitude: appLatLong.long,
-          ),
-          icon: PlacemarkIcon.single(
-            PlacemarkIconStyle(
-                image: BitmapDescriptor.fromAssetImage('lib/assets/user.png'),
-                rotationType: RotationType.rotate,
-                scale: 1.3),
-          ),
-          mapId: mapObjectId,
-          opacity: 1);
+    userLocationMarker = PlacemarkMapObject(
+        point: Point(
+          latitude: appLatLong.lat,
+          longitude: appLatLong.long,
+        ),
+        icon: PlacemarkIcon.single(
+          PlacemarkIconStyle(
+              image: BitmapDescriptor.fromAssetImage('lib/assets/user.png'),
+              rotationType: RotationType.rotate,
+              scale: 1.3),
+        ),
+        mapId: mapObjectId,
+        opacity: 1);
+    final index = placemarks.indexWhere(
+        (marker) => marker.mapId.value == userLocationMarker!.mapId.value);
+    if (index >= 0) {
       setState(() {
-        placemarks.add(userLocationMarker!);
+        placemarks[index] = userLocationMarker!;
       });
     } else {
-      final index = placemarks.indexWhere(
-          (marker) => marker.mapId.value == userLocationMarker!.mapId.value);
-      if (index >= 0) {
-        setState(() {
-          placemarks[index] = userLocationMarker!;
-        });
-      }
+      placemarks.add(userLocationMarker!);
     }
   }
 

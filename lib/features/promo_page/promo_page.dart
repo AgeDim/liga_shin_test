@@ -23,11 +23,6 @@ class _PromoPageState extends State<PromoPage> {
       final email = _emailController.text;
       final carNumber = _carNumberController.text;
 
-      print('Name: $name');
-      print('Phone: $phone');
-      print('Email: $email');
-      print('Car Number: $carNumber');
-
       _nameController.clear();
       _phoneController.clear();
       _emailController.clear();

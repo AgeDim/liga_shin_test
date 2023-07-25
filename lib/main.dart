@@ -17,7 +17,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool isFirstRun = prefs.getString('lastUpdate') == null ? true : false;
-  print(isFirstRun);
   if (isFirstRun) {
     try {
       var shimont =
