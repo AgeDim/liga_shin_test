@@ -297,17 +297,13 @@ class _MapPageState extends State<MapPage> {
             AppLatLong(
                 lat: cluster.appearance.point.latitude,
                 long: cluster.appearance.point.longitude),
-            self.zIndex);
+            10);
       },
     );
     setState(() {
       placemarks.add(largeMapObject);
     });
   }
-
-  /*_moveToCurrentLocation(AppLatLong(
-            lat: cluster.appearance.point.latitude,
-            long: cluster.appearance.point.longitude));*/
 
   @override
   Widget build(BuildContext context) {
@@ -340,29 +336,57 @@ class _MapPageState extends State<MapPage> {
             ),
             Align(
               alignment: Alignment.topLeft,
-              child: Container(
-                height: 30,
-                margin: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    gradient: StyleLibrary.gradient.button),
-                child: ElevatedButton(
-                  onPressed: () {
-                    findNearestPlacemark();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.transparent,
-                    shadowColor: Colors.transparent,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Container(
+                    height: 30,
+                    margin: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        gradient: StyleLibrary.gradient.button),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        findNearestPlacemark();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.transparent,
+                        shadowColor: Colors.transparent,
+                      ),
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.search, color: Colors.amberAccent),
+                          Text('Найти ближайший'),
+                        ],
+                      ),
+                    ),
                   ),
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.search, color: Colors.amberAccent),
-                      Text('Найти ближайший'),
-                    ],
+                  Container(
+                    height: 30,
+                    width: 180,
+                    margin: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.grey.withOpacity(0.3),
+                    ),
+                    child: TextField(
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(vertical: 12),
+                        hintText: 'Поиск города',
+                        prefixIcon: Icon(
+                          Icons.search,
+                          color: Colors.amber,
+                        ),
+                        border: InputBorder.none,
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
             ),
             Align(
