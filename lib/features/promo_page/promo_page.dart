@@ -1,4 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
+import '../services/constants.dart';
+import '../services/logger.dart';
 
 class PromoPage extends StatefulWidget {
   static const routeName = '/promoPage';
@@ -16,17 +22,54 @@ class _PromoPageState extends State<PromoPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _carNumberController = TextEditingController();
 
-  void _submitForm() {
+  void _submitForm() async {
     if (_formKey.currentState!.validate()) {
       final name = _nameController.text;
       final phone = _phoneController.text;
       final email = _emailController.text;
-      final carNumber = _carNumberController.text;
+      final carNumber = _carNumberController.text.toUpperCase();
 
       _nameController.clear();
       _phoneController.clear();
       _emailController.clear();
       _carNumberController.clear();
+
+      final message = '''
+      Привет, пользователь отправил промо форму:
+      Имя: $name
+      Телефон: $phone
+      Почта: $email
+      Номер машины: $carNumber
+    ''';
+
+      const url =
+          'https://api.telegram.org/bot${Constants.tgBotToken}/sendMessage';
+
+      Map<String, String> headers = {
+        'Content-Type': 'application/json',
+      };
+
+      Map<String, String> body = {
+        'chat_id': Constants.tgChatId,
+        'text': message,
+      };
+
+      try {
+        final response = await http.post(
+          Uri.parse(url),
+          headers: headers,
+          body: json.encode(body),
+        );
+
+        if (response.statusCode == 200) {
+          CustomLogger.info("Message sent successfully!");
+        } else {
+          CustomLogger.info(
+              "Failed to send message. Status code: ${response.statusCode}");
+        }
+      } catch (e) {
+        CustomLogger.info("Error sending message: $e");
+      }
     }
   }
 
@@ -103,7 +146,7 @@ class _PromoPageState extends State<PromoPage> {
                         validator: (value) {
                           final carNumberRegex = RegExp(
                               r'^[АВЕКМНОРСТУХABEKMHOPCTYX]\d{3}[АВЕКМНОРСТУХABEKMHOPCTYX]{2}\d{2,3}$');
-                          if (!carNumberRegex.hasMatch(value!)) {
+                          if (!carNumberRegex.hasMatch(value!.toUpperCase())) {
                             return 'Пожалуйста введите корректный номер вашей машины';
                           }
                           return null;

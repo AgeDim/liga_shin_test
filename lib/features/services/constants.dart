@@ -7,4 +7,6 @@ class Constants{
   static const address = '196626, Санкт-Петербург, Шушары ул. Ленина д. 8';
   static const webSiteAddress = 'https://auto.shinliga.ru/shinomontazh';
   static const searchKey = '7f893f68-a064-4d0b-8901-1ac14ddf9092';
+  static const tgBotToken = '6431390695:AAH-kMxuNXUwqsVbG--R-YT2IrC1IqrT0cU';
+  static const tgChatId = '1033821599';
 }
