@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:liga_shin_test/features/contact_page/contact_page.dart';
-import 'package:liga_shin_test/features/model/provider_shimont.dart';
+import 'package:liga_shin_test/features/model/data.dart';
+import 'package:liga_shin_test/features/model/data_provider.dart';
 import 'package:liga_shin_test/features/style/style_library.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:intl/intl.dart';
 
 import '../main_page/map_page.dart';
 import '../promo_page/promo_page.dart';
@@ -24,7 +24,7 @@ class _StartPageState extends State<StartPage> {
   String formatDate(String dateStr) {
     if (dateStr != "") {
       final parsedDateTime = DateTime.parse(dateStr);
-      final formatter = DateFormat("dd MMMM yyyy HH:mm", "ru");
+      final formatter = StyleLibrary.date.formatter;
       return formatter.format(parsedDateTime);
     }
     return "";
@@ -33,7 +33,7 @@ class _StartPageState extends State<StartPage> {
   _setUpdTime() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      updatedTime = prefs.getString('lastUpdate')!;
+      updatedTime = prefs.getString(DataType.lastUpdate.toString())!;
     });
   }
 
@@ -65,7 +65,7 @@ class _StartPageState extends State<StartPage> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    const MapPage(type: "shimont")));
+                                    const MapPage(type: DataType.shimont)));
                       },
                       child: Column(
                         children: [
@@ -98,7 +98,7 @@ class _StartPageState extends State<StartPage> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    const MapPage(type: "carWashing")));
+                                    const MapPage(type: DataType.carWashing)));
                       },
                       child: Column(
                         children: [

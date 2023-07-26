@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:liga_shin_test/features/services/constants.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ContactPage extends StatelessWidget {
@@ -8,8 +9,8 @@ class ContactPage extends StatelessWidget {
 
   void _makePhoneCall(String phoneNumber) async {
     final url = 'tel:$phoneNumber';
-    if (await canLaunch(url)) {
-      await launch(url);
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url));
     } else {
       throw 'Could not launch $url';
     }
@@ -22,16 +23,16 @@ class ContactPage extends StatelessWidget {
     );
 
     final urlString = emailLaunchUri.toString();
-    if (await canLaunch(urlString)) {
-      await launch(urlString);
+    if (await canLaunchUrl(Uri.parse(urlString))) {
+      await launchUrl(Uri.parse(urlString));
     } else {
       throw 'Could not launch $urlString';
     }
   }
 
   void _openWebsite(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url));
     } else {
       throw 'Could not launch $url';
     }
@@ -91,10 +92,10 @@ class ContactPage extends StatelessWidget {
                             margin: const EdgeInsets.symmetric(horizontal: 10),
                             child: GestureDetector(
                               onTap: () {
-                                _makePhoneCall('+7(965)0248715');
+                                _makePhoneCall(Constants.companyPhone);
                               },
                               child: const Text(
-                                '+7 (965) 024 87 15',
+                                Constants.companyPhone,
                                 style: TextStyle(
                                     color: Colors.red,
                                     decoration: TextDecoration.underline,
@@ -133,10 +134,10 @@ class ContactPage extends StatelessWidget {
                               children: [
                                 GestureDetector(
                                   onTap: () {
-                                    _sendEmail('office@shinliga.ru');
+                                    _sendEmail(Constants.companyMail);
                                   },
                                   child: const Text(
-                                    'office@shinliga.ru',
+                                    Constants.companyMail,
                                     style: TextStyle(
                                         color: Colors.red,
                                         decoration: TextDecoration.underline,
@@ -145,10 +146,10 @@ class ContactPage extends StatelessWidget {
                                 ),
                                 GestureDetector(
                                   onTap: () {
-                                    _sendEmail('ski@shinliga.ru');
+                                    _sendEmail(Constants.secondCompanyMail);
                                   },
                                   child: const Text(
-                                    'ski@shinliga.ru',
+                                    Constants.secondCompanyMail,
                                     style: TextStyle(
                                         color: Colors.red,
                                         decoration: TextDecoration.underline,
@@ -184,7 +185,7 @@ class ContactPage extends StatelessWidget {
                               margin: const EdgeInsets.symmetric(
                                   horizontal: 10, vertical: 20),
                               child: const Text(
-                                '196626, Санкт-Петербург, Шушары ул. Ленина д. 8',
+                                Constants.address,
                                 style: TextStyle(fontSize: 15),
                               )),
                         ),
@@ -214,10 +215,10 @@ class ContactPage extends StatelessWidget {
                                 horizontal: 10, vertical: 20),
                             child: GestureDetector(
                               onTap: () {
-                                _openWebsite('https://auto.shinliga.ru/shinomontazh');
+                                _openWebsite(Constants.webSiteAddress);
                               },
                               child: const Text(
-                                'auto.shinliga.ru/shinomontazh',
+                                Constants.webSiteAddress,
                                 style: TextStyle(
                                     color: Colors.red,
                                     decoration: TextDecoration.underline,

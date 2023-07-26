@@ -53,3 +53,5 @@ class Data {
     };
   }
 }
+
+enum DataType { shimont, carWashing, lastUpdate }

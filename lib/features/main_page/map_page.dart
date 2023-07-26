@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:ui';
 import 'dart:math' as math;
@@ -6,18 +7,21 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:liga_shin_test/features/main_page/widgets/selected_placemark_card.dart';
+import 'package:liga_shin_test/features/model/search_response.dart';
+import 'package:liga_shin_test/features/services/constants.dart';
 import 'package:provider/provider.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
+import 'package:http/http.dart' as http;
 
 import '../model/location/app_lat_long.dart';
-import '../model/provider_shimont.dart';
-import '../model/shimont.dart';
+import '../model/data_provider.dart';
+import '../model/data.dart';
 import '../services/location_service.dart';
 import '../style/style_library.dart';
 
 class MapPage extends StatefulWidget {
   static const routeName = '/mapPage';
-  final String type;
+  final DataType type;
 
   const MapPage({super.key, required this.type});
 
@@ -27,17 +31,61 @@ class MapPage extends StatefulWidget {
 
 class _MapPageState extends State<MapPage> {
   final mapControllerCompleter = Completer<YandexMapController>();
-  final LocationService locationService = LocationService();
+  final TextEditingController _textEditingController = TextEditingController();
+  LocationService locationService = LocationService();
+  List<MapObject> placemarks = [];
   StreamSubscription<Position>? locationSubscription;
   PlacemarkMapObject? userLocationMarker;
   List<Data> points = [];
-  final List<MapObject> placemarks = [];
   PlacemarkMapObject? selectedPlacemark;
+  Timer? _debounce;
+  List<SearchResponse> searchResults = [];
 
   @override
   void initState() {
     super.initState();
     _initPermission().ignore();
+    _textEditingController.addListener(_onSearchTextChanged);
+  }
+
+  void _onSearchTextChanged() {
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
+    _debounce = Timer(const Duration(seconds: 1), () {
+      String searchText = _textEditingController.text;
+      if (searchText.isNotEmpty) {
+        _makeApiRequest(searchText);
+      } else {
+        setState(() {
+          searchResults = [];
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    locationSubscription?.cancel();
+    _debounce?.cancel();
+    _textEditingController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _makeApiRequest(String searchText) async {
+    String url =
+        "https://search-maps.yandex.ru/v1/?text=$searchText&type=geo&lang=ru_RU&apikey=${Constants.searchKey}";
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      var responseData = jsonDecode(response.body);
+      List<SearchResponse> results = [];
+      for (var item in responseData['features']) {
+        results.add(
+          SearchResponse.fromJson(item),
+        );
+      }
+      setState(() {
+        searchResults = results;
+      });
+    }
   }
 
   Future<void> _initPermission() async {
@@ -64,6 +112,23 @@ class _MapPageState extends State<MapPage> {
     } catch (_) {
       location = defLocation;
     }
+    MapObjectId mapObjectId = const MapObjectId("userLocationMarker");
+    userLocationMarker = PlacemarkMapObject(
+        point: Point(
+          latitude: location.lat,
+          longitude: location.long,
+        ),
+        icon: PlacemarkIcon.single(
+          PlacemarkIconStyle(
+              image: BitmapDescriptor.fromAssetImage('lib/assets/user.png'),
+              rotationType: RotationType.rotate,
+              scale: 1.3),
+        ),
+        mapId: mapObjectId,
+        opacity: 1);
+    setState(() {
+      placemarks.add(userLocationMarker!);
+    });
     _moveToCurrentLocation(location, 12);
   }
 
@@ -113,12 +178,6 @@ class _MapPageState extends State<MapPage> {
     setState(() {
       selectedPlacemark = null;
     });
-  }
-
-  @override
-  void dispose() {
-    locationSubscription?.cancel();
-    super.dispose();
   }
 
   void findNearestPlacemark() async {
@@ -304,9 +363,9 @@ class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     setState(() {
-      points = (widget.type == "shimont"
+      points = (widget.type == DataType.shimont
           ? Provider.of<DataProvider>(context).shimont
-          : widget.type == "carWashing"
+          : widget.type == DataType.carWashing
               ? Provider.of<DataProvider>(context).carWashing
               : null)!;
     });
@@ -369,9 +428,10 @@ class _MapPageState extends State<MapPage> {
                       color: Colors.grey.withOpacity(0.3),
                     ),
                     child: TextField(
+                      controller: _textEditingController,
                       textAlign: TextAlign.center,
                       maxLines: 1,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         contentPadding: EdgeInsets.symmetric(vertical: 12),
                         hintText: 'Поиск города',
                         prefixIcon: Icon(
@@ -382,6 +442,43 @@ class _MapPageState extends State<MapPage> {
                       ),
                     ),
                   ),
+                  if (searchResults.isNotEmpty)
+                    Flexible(
+                      child: SingleChildScrollView(
+                        child: Container(
+                          width: 180,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.white,
+                          ),
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: searchResults.length,
+                            itemBuilder: (context, index) {
+                              return GestureDetector(
+                                onTap: () {
+                                  _moveToCurrentLocation(
+                                      searchResults[index].geometry.coordinates,
+                                      11);
+                                  setState(() {
+                                    searchResults = [];
+                                  });
+                                  _textEditingController.clear();
+                                  FocusScope.of(context).unfocus();
+                                },
+                                child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20, vertical: 15),
+                                    child: Text(
+                                      searchResults[index].properties.name,
+                                      style: StyleLibrary.text.black16,
+                                    )),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
                 ],
               ),
             ),

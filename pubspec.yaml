@@ -24,6 +24,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  logger: ^1.4.0
   yandex_mapkit: ^3.3.3
   geolocator: ^9.0.2
   url_launcher: ^6.1.12

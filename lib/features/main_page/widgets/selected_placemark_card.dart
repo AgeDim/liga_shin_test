@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../info_page/info_page.dart';
-import '../../model/shimont.dart';
+import '../../model/data.dart';
 import '../../style/style_library.dart';
 import 'diamondClipper.dart';
 
@@ -16,8 +16,8 @@ class SelectedPlacemarkCard extends StatelessWidget {
   Future<void> _launchNavigation(dynamic st) async {
     final url =
         'geo:${double.parse(point.tvCoords.split(',')[0])},${double.parse(point.tvCoords.split(',')[1])}';
-    if (await canLaunch(url)) {
-      await launch(url, forceSafariVC: false);
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url));
     } else {
       throw 'Could not launch navigation';
     }

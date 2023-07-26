@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:liga_shin_test/features/model/shimont.dart';
+import 'package:liga_shin_test/features/model/data.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../main_page/widgets/diamondClipper.dart';
@@ -13,8 +13,8 @@ class InfoPage extends StatelessWidget {
   Future<void> _launchNavigation(Data st) async {
     final url =
         'geo:${double.parse(point.tvCoords.split(',')[0])},${double.parse(point.tvCoords.split(',')[1])}';
-    if (await canLaunch(url)) {
-      await launch(url, forceSafariVC: false);
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url));
     } else {
       throw 'Could not launch navigation';
     }
