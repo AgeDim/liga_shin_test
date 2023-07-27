@@ -3,7 +3,6 @@ import 'package:get_it/get_it.dart';
 import 'package:liga_shin_test/features/contact_page/contact_page.dart';
 import 'package:liga_shin_test/features/model/data.dart';
 import 'package:liga_shin_test/features/model/data_provider.dart';
-import 'package:liga_shin_test/features/services/logger.dart';
 import 'package:liga_shin_test/features/style/style_library.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/repository/repository.dart';
 import '../main_page/map_page.dart';
 import '../promo_page/promo_page.dart';
+import '../services/snack_bar.dart';
 
 class StartPage extends StatefulWidget {
   static const routeName = '/startPage';
@@ -53,7 +53,11 @@ class _StartPageState extends State<StartPage> {
           .setCarWashing(carWashingData);
       Provider.of<DataProvider>(context, listen: false).setShimont(shimontData);
     } catch (e) {
-      CustomLogger.error(e.toString());
+      SnackBarService.showSnackBar(
+        context,
+        e.toString(),
+        false,
+      );
     } finally {
       setState(() {
         isLoading = false;
@@ -90,13 +94,23 @@ class _StartPageState extends State<StartPage> {
                           margin: const EdgeInsets.only(left: 20, right: 10),
                           child: ElevatedButton(
                             style: StyleLibrary.button.defaultButton,
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const MapPage(
-                                          type: DataType.shimont)));
-                            },
+                            onPressed: Provider.of<DataProvider>(context)
+                                    .getShimont
+                                    .isEmpty
+                                ? () => {
+                                      SnackBarService.showSnackBar(
+                                          context,
+                                          "Нет данных для отображения, пожалуйста обновите данные",
+                                          true)
+                                    }
+                                : () => {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const MapPage(
+                                                      type: DataType.shimont)))
+                                    },
                             child: Column(
                               children: [
                                 Text(
@@ -123,13 +137,24 @@ class _StartPageState extends State<StartPage> {
                           margin: const EdgeInsets.only(left: 10, right: 20),
                           child: ElevatedButton(
                             style: StyleLibrary.button.defaultButton,
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const MapPage(
-                                          type: DataType.carWashing)));
-                            },
+                            onPressed: Provider.of<DataProvider>(context)
+                                    .getCarWashing
+                                    .isEmpty
+                                ? () => {
+                                      SnackBarService.showSnackBar(
+                                          context,
+                                          "Нет данных для отображения, пожалуйста обновите данные",
+                                          true)
+                                    }
+                                : () => {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const MapPage(
+                                                      type:
+                                                          DataType.carWashing)))
+                                    },
                             child: Column(
                               children: [
                                 Text(

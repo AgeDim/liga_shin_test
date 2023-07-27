@@ -16,9 +16,8 @@ class AutoShinLigaRepository  implements Repository {
       await storage.saveAll(data, type);
       return data;
     } catch (exception) {
-      //todo: Обработать исключение
       CustomLogger.info('No Internet');
-
+      CustomLogger.info(exception.toString());
       return storage.getAll(type);
     }
   }
