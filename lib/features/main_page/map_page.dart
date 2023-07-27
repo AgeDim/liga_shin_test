@@ -364,9 +364,9 @@ class _MapPageState extends State<MapPage> {
   Widget build(BuildContext context) {
     setState(() {
       points = (widget.type == DataType.shimont
-          ? Provider.of<DataProvider>(context).shimont
+          ? Provider.of<DataProvider>(context).getShimont
           : widget.type == DataType.carWashing
-              ? Provider.of<DataProvider>(context).carWashing
+              ? Provider.of<DataProvider>(context).getCarWashing
               : null)!;
     });
     return Scaffold(
