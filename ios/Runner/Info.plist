@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This app needs access to the location when it is open in order to update the marker on the map while the driver is driving to the car service point</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>This app needs location access while running in the background to update the marker on the map while the driver is driving to a car service point and switching between apps</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -49,11 +53,11 @@
 	<true/>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
-	    <string>https</string>
-	    <string>http</string>
-	    <string>tel</string>
-	    <string>sms</string>
-	    <string>mailto</string>
+		<string>https</string>
+		<string>http</string>
+		<string>tel</string>
+		<string>sms</string>
+		<string>mailto</string>
 	</array>
 </dict>
 </plist>

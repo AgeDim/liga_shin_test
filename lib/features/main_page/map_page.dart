@@ -9,6 +9,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:liga_shin_test/features/main_page/widgets/selected_placemark_card.dart';
 import 'package:liga_shin_test/features/model/search_response.dart';
 import 'package:liga_shin_test/features/services/constants.dart';
+import 'package:liga_shin_test/features/services/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 import 'package:http/http.dart' as http;
@@ -89,8 +90,7 @@ class _MapPageState extends State<MapPage> {
   }
 
   Future<void> _initPermission() async {
-    if (!await LocationService().checkPermission()) {
-      await LocationService().requestPermission();
+    if (!await LocationService().checkPermission()) {await LocationService().requestPermission();
     }
     await _fetchCurrentLocation();
     _startLocationUpdates();
