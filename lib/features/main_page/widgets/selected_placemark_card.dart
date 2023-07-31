@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -14,10 +16,18 @@ class SelectedPlacemarkCard extends StatelessWidget {
       {super.key, required this.point, required this.close});
 
   Future<void> _launchNavigation(dynamic st) async {
-    final url =
-        'geo:${double.parse(point.tvCoords.split(',')[0])},${double.parse(point.tvCoords.split(',')[1])}';
-    if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url));
+    double latitude = double.parse(point.tvCoords.split(',')[0]);
+    double longitude = double.parse(point.tvCoords.split(',')[1]);
+    Uri uri;
+
+    if (Platform.isIOS) {
+      uri = Uri.parse('http://maps.apple.com/?daddr=$latitude,$longitude');
+    } else {
+      uri = Uri.parse('geo:$latitude,$longitude');
+    }
+
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
     } else {
       throw 'Could not launch navigation';
     }
@@ -73,9 +83,9 @@ class SelectedPlacemarkCard extends StatelessWidget {
                       style: const TextStyle(color: Colors.white),
                     ),
                   ),
-                if(point.tvDistance != null)
-                Flexible(
-                  child: Container(
+                if (point.tvDistance != null)
+                  Flexible(
+                    child: Container(
                       padding: const EdgeInsets.all(10),
                       margin: const EdgeInsets.only(right: 10),
                       decoration: const BoxDecoration(
@@ -87,7 +97,7 @@ class SelectedPlacemarkCard extends StatelessWidget {
                         style: const TextStyle(color: Colors.white),
                       ),
                     ),
-                ),
+                  ),
               ],
             ),
           ),
