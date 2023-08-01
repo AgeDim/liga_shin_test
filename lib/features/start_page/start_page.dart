@@ -79,190 +79,216 @@ class _StartPageState extends State<StartPage> {
       body: Container(
         alignment: Alignment.center,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            if (isLoading) const CircularProgressIndicator(),
-            if (!isLoading)
-              Column(
+            Container(
+              margin: const EdgeInsets.symmetric(vertical: 50, horizontal: 20),
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Container(
-                          margin: const EdgeInsets.only(left: 20, right: 10),
-                          child: ElevatedButton(
-                            style: StyleLibrary.button.defaultButton,
-                            onPressed: Provider.of<DataProvider>(context)
-                                    .getShimont
-                                    .isEmpty
-                                ? () => {
-                                      SnackBarService.showSnackBar(
-                                          context,
-                                          "Нет данных для отображения, пожалуйста обновите данные",
-                                          true)
-                                    }
-                                : () => {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const MapPage(
-                                                      type: DataType.shimont)))
-                                    },
-                            child: Column(
-                              children: [
-                                Text(
-                                  'Шиномонтажи',
-                                  style: StyleLibrary.text.black14,
-                                ),
-                                const Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Icon(
-                                      Icons.directions_car_sharp,
-                                      color: Colors.black87,
-                                      size: 40,
-                                    ),
-                                  ],
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
+                  Flexible(
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 50, horizontal: 20),
+                      child: Text(
+                        "Данные от: ${formatDate(updatedTime)}",
+                        style: StyleLibrary.text.black16,
                       ),
-                      Expanded(
-                        child: Container(
-                          margin: const EdgeInsets.only(left: 10, right: 20),
-                          child: ElevatedButton(
-                            style: StyleLibrary.button.defaultButton,
-                            onPressed: Provider.of<DataProvider>(context)
-                                    .getCarWashing
-                                    .isEmpty
-                                ? () => {
-                                      SnackBarService.showSnackBar(
-                                          context,
-                                          "Нет данных для отображения, пожалуйста обновите данные",
-                                          true)
-                                    }
-                                : () => {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const MapPage(
-                                                      type:
-                                                          DataType.carWashing)))
-                                    },
-                            child: Column(
-                              children: [
-                                Text(
-                                  'Мойки',
-                                  style: StyleLibrary.text.black14,
-                                ),
-                                const Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Icon(
-                                      Icons.local_car_wash_outlined,
-                                      color: Colors.black87,
-                                      size: 40,
-                                    ),
-                                  ],
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Container(
-                          margin: const EdgeInsets.only(
-                              left: 20, right: 10, top: 10),
-                          child: ElevatedButton(
-                            style: StyleLibrary.button.defaultButton,
-                            onPressed: () {
-                              Navigator.pushNamed(
-                                  context, ContactPage.routeName);
-                            },
-                            child: Column(
-                              children: [
-                                Text(
-                                  'Контакты',
-                                  style: StyleLibrary.text.black14,
-                                ),
-                                const Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Icon(
-                                      Icons.contact_mail_outlined,
-                                      color: Colors.black87,
-                                      size: 40,
-                                    ),
-                                  ],
-                                )
-                              ],
-                            ),
-                          ),
+                  ElevatedButton(
+                    onPressed: () {
+                      _initData();
+                      _setUpdTime();
+                    },
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            Colors.transparent),
+                        elevation: MaterialStateProperty.all<double>(0)),
+                    child: Row(
+                      children: [
+                        Text(
+                          'Обновить',
+                          style: StyleLibrary.text.black16,
                         ),
-                      ),
-                      Expanded(
-                        child: Container(
-                          margin: const EdgeInsets.only(
-                              left: 10, right: 20, top: 10),
-                          child: ElevatedButton(
-                            style: StyleLibrary.button.defaultButton,
-                            onPressed: () {
-                              Navigator.pushNamed(context, PromoPage.routeName);
-                            },
-                            child: Column(
-                              children: [
-                                Text(
-                                  'Промо',
-                                  style: StyleLibrary.text.black14,
-                                ),
-                                const Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Icon(
-                                      Icons.percent_outlined,
-                                      color: Colors.black87,
-                                      size: 40,
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
+                        const Icon(
+                          Icons.refresh_rounded,
+                          color: Colors.black,
                         ),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.symmetric(
-                            vertical: 50, horizontal: 20),
-                        child: Text(
-                            "Последнее обновление данных: ${formatDate(updatedTime)}",
-                            style: StyleLibrary.text.black14),
-                      ),
-                      IconButton(
-                          onPressed: () {
-                            repository.getAll(DataType.shimont);
-                            repository.getAll(DataType.carWashing);
-                            _setUpdTime();
-                          },
-                          icon: const Icon(Icons.refresh_rounded))
-                    ],
+                      ],
+                    ),
                   ),
                 ],
+              ),
+            ),
+            if (isLoading) const CircularProgressIndicator(),
+            if (!isLoading)
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Container(
+                            margin: const EdgeInsets.only(left: 20, right: 10),
+                            child: ElevatedButton(
+                              style: StyleLibrary.button.defaultButton,
+                              onPressed: Provider.of<DataProvider>(context)
+                                      .getShimont
+                                      .isEmpty
+                                  ? () => {
+                                        SnackBarService.showSnackBar(
+                                            context,
+                                            "Нет данных для отображения, пожалуйста обновите данные",
+                                            true)
+                                      }
+                                  : () => {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const MapPage(
+                                                        type:
+                                                            DataType.shimont)))
+                                      },
+                              child: Column(
+                                children: [
+                                  Text(
+                                    'Шиномонтажи',
+                                    style: StyleLibrary.text.black14,
+                                  ),
+                                  const Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Icon(
+                                        Icons.directions_car_sharp,
+                                        color: Colors.black87,
+                                        size: 40,
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Container(
+                            margin: const EdgeInsets.only(left: 10, right: 20),
+                            child: ElevatedButton(
+                              style: StyleLibrary.button.defaultButton,
+                              onPressed: Provider.of<DataProvider>(context)
+                                      .getCarWashing
+                                      .isEmpty
+                                  ? () => {
+                                        SnackBarService.showSnackBar(
+                                            context,
+                                            "Нет данных для отображения, пожалуйста обновите данные",
+                                            true)
+                                      }
+                                  : () => {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const MapPage(
+                                                        type: DataType
+                                                            .carWashing)))
+                                      },
+                              child: Column(
+                                children: [
+                                  Text(
+                                    'Мойки',
+                                    style: StyleLibrary.text.black14,
+                                  ),
+                                  const Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Icon(
+                                        Icons.local_car_wash_outlined,
+                                        color: Colors.black87,
+                                        size: 40,
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Container(
+                            margin: const EdgeInsets.only(
+                                left: 20, right: 10, top: 10),
+                            child: ElevatedButton(
+                              style: StyleLibrary.button.defaultButton,
+                              onPressed: () {
+                                Navigator.pushNamed(
+                                    context, ContactPage.routeName);
+                              },
+                              child: Column(
+                                children: [
+                                  Text(
+                                    'Контакты',
+                                    style: StyleLibrary.text.black14,
+                                  ),
+                                  const Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Icon(
+                                        Icons.contact_mail_outlined,
+                                        color: Colors.black87,
+                                        size: 40,
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Container(
+                            margin: const EdgeInsets.only(
+                                left: 10, right: 20, top: 10),
+                            child: ElevatedButton(
+                              style: StyleLibrary.button.defaultButton,
+                              onPressed: () {
+                                Navigator.pushNamed(
+                                    context, PromoPage.routeName);
+                              },
+                              child: Column(
+                                children: [
+                                  Text(
+                                    'Промо',
+                                    style: StyleLibrary.text.black14,
+                                  ),
+                                  const Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Icon(
+                                        Icons.percent_outlined,
+                                        color: Colors.black87,
+                                        size: 40,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
           ],
         ),

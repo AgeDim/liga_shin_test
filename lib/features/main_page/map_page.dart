@@ -3,16 +3,19 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:ui';
 import 'dart:math' as math;
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:liga_shin_test/features/main_page/widgets/selected_placemark_card.dart';
+import 'package:liga_shin_test/features/main_page/widgets/diamondClipper.dart';
 import 'package:liga_shin_test/features/model/search_response.dart';
 import 'package:liga_shin_test/features/services/constants.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 import 'package:http/http.dart' as http;
 
+import '../info_page/info_page.dart';
 import '../model/location/app_lat_long.dart';
 import '../model/data_provider.dart';
 import '../model/data.dart';
@@ -37,15 +40,27 @@ class _MapPageState extends State<MapPage> {
   StreamSubscription<Position>? locationSubscription;
   PlacemarkMapObject? userLocationMarker;
   List<Data> points = [];
-  PlacemarkMapObject? selectedPlacemark;
   Timer? _debounce;
   List<SearchResponse> searchResults = [];
+  double searchWidth = 180;
+  final FocusNode _searchFocusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
     _initPermission().ignore();
     _textEditingController.addListener(_onSearchTextChanged);
+    _searchFocusNode.addListener(_onSearchFocusChanged);
+  }
+
+  void _onSearchFocusChanged() {
+    setState(() {
+      if (_searchFocusNode.hasFocus) {
+        searchWidth = MediaQuery.of(context).size.width;
+      } else {
+        searchWidth = 180;
+      }
+    });
   }
 
   void _onSearchTextChanged() {
@@ -67,6 +82,7 @@ class _MapPageState extends State<MapPage> {
     locationSubscription?.cancel();
     _debounce?.cancel();
     _textEditingController.dispose();
+    _searchFocusNode.dispose();
     super.dispose();
   }
 
@@ -148,19 +164,16 @@ class _MapPageState extends State<MapPage> {
     );
   }
 
-  void _updateUserLocationMarker(AppLatLong appLatLong) {
+  void _updateUserLocationMarker(AppLatLong appLatLong) async {
     MapObjectId mapObjectId = const MapObjectId("userLocationMarker");
     userLocationMarker = PlacemarkMapObject(
         point: Point(
           latitude: appLatLong.lat,
           longitude: appLatLong.long,
         ),
-        icon: PlacemarkIcon.single(
-          PlacemarkIconStyle(
-              image: BitmapDescriptor.fromAssetImage('lib/assets/user.png'),
-              rotationType: RotationType.rotate,
-              scale: 1.3),
-        ),
+        icon: PlacemarkIcon.single(PlacemarkIconStyle(
+            image: BitmapDescriptor.fromBytes(await _buildUserIcon()),
+            scale: 1)),
         mapId: mapObjectId,
         opacity: 1);
     final index = placemarks.indexWhere(
@@ -172,12 +185,6 @@ class _MapPageState extends State<MapPage> {
     } else {
       placemarks.add(userLocationMarker!);
     }
-  }
-
-  void close() {
-    setState(() {
-      selectedPlacemark = null;
-    });
   }
 
   void findNearestPlacemark() async {
@@ -201,17 +208,10 @@ class _MapPageState extends State<MapPage> {
         nearestPlacemark = placemark;
       }
     }
-    setState(() {
-      selectedPlacemark = PlacemarkMapObject(
-          mapId: MapObjectId(nearestPlacemark!.pageTitle),
-          point: Point(
-            latitude: double.parse(nearestPlacemark.tvCoords.split(',')[0]),
-            longitude: double.parse(nearestPlacemark.tvCoords.split(',')[1]),
-          ));
-    });
+    _showCustomModal(context, nearestPlacemark!);
     _moveToCurrentLocation(
         AppLatLong(
-            lat: double.parse(nearestPlacemark!.tvCoords.split(',')[0]),
+            lat: double.parse(nearestPlacemark.tvCoords.split(',')[0]),
             long: double.parse(nearestPlacemark.tvCoords.split(',')[1])),
         14);
   }
@@ -272,6 +272,42 @@ class _MapPageState extends State<MapPage> {
     return pngBytes!.buffer.asUint8List();
   }
 
+  Future<Uint8List> _buildUserIcon() async {
+    final recorder = ui.PictureRecorder();
+    final canvas = Canvas(recorder);
+    const size = Size(150, 150);
+    const shadowColor = Color(0x50000000);
+
+    final shadowPaint = Paint()
+      ..color = shadowColor
+      ..maskFilter = const MaskFilter.blur(BlurStyle.solid, 20);
+    const shadowOffset = Offset(10, 9);
+    final shadowCircleOffset = Offset(
+      size.width / 2 + shadowOffset.dx,
+      size.height / 2 + shadowOffset.dy,
+    );
+    const radius = 60.0;
+    canvas.drawCircle(shadowCircleOffset, radius, shadowPaint);
+
+    final fillPaint = Paint()
+      ..color = StyleLibrary.color.marker
+      ..style = PaintingStyle.fill;
+    final strokePaint = Paint()
+      ..color = Colors.white
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 10;
+    final circleOffset = Offset(size.width / 2, size.height / 2);
+    canvas.drawCircle(circleOffset, radius, fillPaint);
+    canvas.drawCircle(circleOffset, radius, strokePaint);
+
+    final image = await recorder
+        .endRecording()
+        .toImage(size.width.toInt(), size.height.toInt());
+    final pngBytes = await image.toByteData(format: ui.ImageByteFormat.png);
+
+    return pngBytes!.buffer.asUint8List();
+  }
+
   void _zoomIn() async {
     YandexMapController controller = await mapControllerCompleter.future;
     controller.moveCamera(CameraUpdate.zoomIn(),
@@ -320,9 +356,8 @@ class _MapPageState extends State<MapPage> {
             longitude: double.parse(point.tvCoords.split(',')[1]),
           ),
           onTap: (placemark, point) {
-            setState(() {
-              selectedPlacemark = placemark;
-            });
+            _showCustomModal(
+                context, getServiceStationByName(placemark.mapId.value));
           },
           icon: PlacemarkIcon.single(PlacemarkIconStyle(
               image: BitmapDescriptor.fromAssetImage('lib/assets/point.png'),
@@ -360,6 +395,178 @@ class _MapPageState extends State<MapPage> {
     });
   }
 
+  void _showCustomModal(BuildContext context, Data point) {
+    Future<void> launchNavigation(dynamic st) async {
+      final url =
+          'geo:${double.parse(point.tvCoords.split(',')[0])},${double.parse(point.tvCoords.split(',')[1])}';
+      if (await canLaunchUrl(Uri.parse(url))) {
+        await launchUrl(Uri.parse(url));
+      } else {
+        throw 'Could not launch navigation';
+      }
+    }
+
+    showModalBottomSheet(
+        context: context,
+        barrierColor: Colors.transparent,
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+            builder: (context, setState) {
+              return ListTile(
+                title: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Flexible(
+                          child: Container(
+                            margin: const EdgeInsets.all(5),
+                            child: Text(
+                              point.pageTitle,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            icon: const Icon(
+                              Icons.close,
+                              color: Colors.black,
+                            ))
+                      ],
+                    ),
+                    Container(
+                      margin: const EdgeInsets.all(5),
+                      child: Text(
+                        point.tvAddress,
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.symmetric(vertical: 10),
+                      child: Row(
+                        children: [
+                          if (point.tvTrass != null)
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              margin: const EdgeInsets.only(right: 10),
+                              decoration: const BoxDecoration(
+                                color: Colors.lightGreen,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(25)),
+                              ),
+                              child: Text(
+                                '${point.tvTrass}',
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          if (point.tvDistance != null)
+                            Flexible(
+                              child: Container(
+                                padding: const EdgeInsets.all(10),
+                                margin: const EdgeInsets.only(right: 10),
+                                decoration: const BoxDecoration(
+                                  color: Colors.blue,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(25)),
+                                ),
+                                child: Text(
+                                  '${point.tvDistance} км от Москвы',
+                                  style: const TextStyle(color: Colors.white),
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(bottom: 10),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              margin: const EdgeInsets.only(right: 10),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  gradient: StyleLibrary.gradient.button),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              InfoPage(point: point)));
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.transparent,
+                                  shadowColor: Colors.transparent,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Icon(Icons.info,
+                                        color: StyleLibrary.color.darkBlue),
+                                    const Text('Подробнее'),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Container(
+                              margin: const EdgeInsets.only(right: 10),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  gradient: StyleLibrary.gradient.button),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  launchNavigation(point);
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.transparent,
+                                  shadowColor: Colors.transparent,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text('Поехали'),
+                                    SizedBox(
+                                      width: 25,
+                                      height: 25,
+                                      child: ClipPath(
+                                        clipper: DiamondClipper(),
+                                        child: Container(
+                                          color: Colors.amberAccent,
+                                          child: const Icon(
+                                            Icons.turn_right,
+                                            color: Colors.red,
+                                            size: 23,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              );
+            },
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     setState(() {
@@ -394,6 +601,7 @@ class _MapPageState extends State<MapPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
                     height: 30,
@@ -419,66 +627,86 @@ class _MapPageState extends State<MapPage> {
                       ),
                     ),
                   ),
-                  Container(
-                    height: 30,
-                    width: 180,
-                    margin: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.grey.withOpacity(0.3),
-                    ),
-                    child: TextField(
-                      controller: _textEditingController,
-                      textAlign: TextAlign.center,
-                      maxLines: 1,
-                      decoration: const InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(vertical: 12),
-                        hintText: 'Поиск города',
-                        prefixIcon: Icon(
-                          Icons.search,
-                          color: Colors.amber,
+                  Column(
+                    children: [
+                      AnimatedContainer(
+                        duration: const Duration(milliseconds: 500),
+                        height: 30,
+                        width: searchWidth,
+                        margin: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.grey.withOpacity(0.3),
                         ),
-                        border: InputBorder.none,
+                        child: TextField(
+                          focusNode: _searchFocusNode,
+                          controller: _textEditingController,
+                          maxLines: 1,
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 12),
+                            hintText: 'Поиск города',
+                            prefixIcon: const Icon(
+                              Icons.search,
+                              color: Colors.amber,
+                            ),
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                _searchFocusNode.unfocus();
+                                setState(() {
+                                  searchResults = [];
+                                  searchWidth = 180;
+                                });
+                              },
+                              icon: const Icon(
+                                Icons.close,
+                                color: Colors.black,
+                              ),
+                            ),
+                            border: InputBorder.none,
+                          ),
+                        ),
                       ),
-                    ),
+                      if (searchResults.isNotEmpty)
+                        SingleChildScrollView(
+                          child: AnimatedContainer(
+                            width: searchWidth,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.white,
+                            ),
+                            duration: const Duration(milliseconds: 500),
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: searchResults.length,
+                              itemBuilder: (context, index) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    _moveToCurrentLocation(
+                                        searchResults[index]
+                                            .geometry
+                                            .coordinates,
+                                        11);
+                                    setState(() {
+                                      searchResults = [];
+                                    });
+                                    _textEditingController.clear();
+                                    FocusScope.of(context).unfocus();
+                                  },
+                                  child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 20, vertical: 15),
+                                      child: Text(
+                                        searchResults[index].properties.name,
+                                        style: StyleLibrary.text.black16,
+                                      )),
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
-                  if (searchResults.isNotEmpty)
-                    Flexible(
-                      child: SingleChildScrollView(
-                        child: Container(
-                          width: 180,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.white,
-                          ),
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: searchResults.length,
-                            itemBuilder: (context, index) {
-                              return GestureDetector(
-                                onTap: () {
-                                  _moveToCurrentLocation(
-                                      searchResults[index].geometry.coordinates,
-                                      11);
-                                  setState(() {
-                                    searchResults = [];
-                                  });
-                                  _textEditingController.clear();
-                                  FocusScope.of(context).unfocus();
-                                },
-                                child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 20, vertical: 15),
-                                    child: Text(
-                                      searchResults[index].properties.name,
-                                      style: StyleLibrary.text.black16,
-                                    )),
-                              );
-                            },
-                          ),
-                        ),
-                      ),
-                    ),
                 ],
               ),
             ),
@@ -537,13 +765,6 @@ class _MapPageState extends State<MapPage> {
           ],
         ),
       ),
-      bottomNavigationBar: selectedPlacemark != null
-          ? Card(
-              child: SelectedPlacemarkCard(
-              point: getServiceStationByName(selectedPlacemark!.mapId.value),
-              close: close,
-            ))
-          : null,
     );
   }
 }
