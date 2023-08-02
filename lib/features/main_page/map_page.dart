@@ -643,7 +643,7 @@ class _MapPageState extends State<MapPage> {
                           controller: _textEditingController,
                           maxLines: 1,
                           decoration: InputDecoration(
-                            contentPadding: EdgeInsets.symmetric(
+                            contentPadding: const EdgeInsets.symmetric(
                                 vertical: 10, horizontal: 12),
                             hintText: 'Поиск города',
                             prefixIcon: const Icon(
@@ -668,15 +668,16 @@ class _MapPageState extends State<MapPage> {
                         ),
                       ),
                       if (searchResults.isNotEmpty)
-                        SingleChildScrollView(
-                          child: AnimatedContainer(
-                            width: searchWidth,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.white,
-                            ),
-                            duration: const Duration(milliseconds: 500),
+                        AnimatedContainer(
+                          width: searchWidth,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.white,
+                          ),
+                          duration: const Duration(milliseconds: 500),
+                          child: SingleChildScrollView(
                             child: ListView.builder(
+                              physics: const NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
                               itemCount: searchResults.length,
                               itemBuilder: (context, index) {

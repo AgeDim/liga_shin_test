@@ -25,6 +25,7 @@ class _StartPageState extends State<StartPage> {
   final Repository repository = GetIt.instance<Repository>();
   String updatedTime = '';
   bool isLoading = true;
+  final GlobalKey<State> _loadingDialogKey = GlobalKey<State>();
 
   String formatDate(String dateStr) {
     if (dateStr != "") {
@@ -33,6 +34,38 @@ class _StartPageState extends State<StartPage> {
       return formatter.format(parsedDateTime);
     }
     return "";
+  }
+
+  Future<void> _showLoadingDialog() async {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Center(
+            child: AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              content: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: const Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CircularProgressIndicator(),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    Text(
+                      "Подождите, данные грузятся...",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    )
+                  ],
+                ),
+              ),
+              key: _loadingDialogKey,
+            ),
+          );
+        });
   }
 
   _setUpdTime() async {
@@ -44,9 +77,7 @@ class _StartPageState extends State<StartPage> {
 
   void _initData() async {
     try {
-      setState(() {
-        isLoading = true;
-      });
+      _showLoadingDialog();
       List<Data> carWashingData = await repository.getAll(DataType.carWashing);
       List<Data> shimontData = await repository.getAll(DataType.shimont);
       Provider.of<DataProvider>(context, listen: false)
@@ -59,6 +90,7 @@ class _StartPageState extends State<StartPage> {
         false,
       );
     } finally {
+      Navigator.of(_loadingDialogKey.currentContext!).pop();
       setState(() {
         isLoading = false;
       });
@@ -68,7 +100,9 @@ class _StartPageState extends State<StartPage> {
   @override
   void initState() {
     super.initState();
-    _initData();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initData();
+    });
   }
 
   @override
@@ -121,7 +155,6 @@ class _StartPageState extends State<StartPage> {
                 ],
               ),
             ),
-            if (isLoading) const CircularProgressIndicator(),
             if (!isLoading)
               Expanded(
                 child: Column(
