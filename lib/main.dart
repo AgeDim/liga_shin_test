@@ -1,57 +1,37 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:liga_shin_test/features/contact_page/contact_page.dart';
 import 'package:liga_shin_test/features/promo_page/promo_page.dart';
-import 'package:liga_shin_test/features/services/constants.dart';
-import 'package:liga_shin_test/features/services/logger.dart';
 import 'package:liga_shin_test/features/start_page/start_page.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
 import 'package:intl/date_symbol_data_local.dart';
 
+import 'data/repository/auto_shinliga_repository.dart';
+import 'data/repository/remote_repository/remote_repository.dart';
+import 'data/repository/repository.dart';
+import 'data/repository/storage_repository/storage_repository.dart';
+import 'data/storage/pref/pref.dart';
+import 'data/storage/storage.dart';
 import 'features/model/data_provider.dart';
-import 'features/model/data.dart';
+
 
 void main() async {
   await initializeDateFormatting('ru', null);
   WidgetsFlutterBinding.ensureInitialized();
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  bool isFirstRun =
-      prefs.getString(DataType.lastUpdate.toString()) == null ? true : false;
-  if (isFirstRun) {
-    try {
-      var shimont = await http.get(Uri.parse(Constants.getTire));
-      if (shimont.statusCode == 200) {
-        List<Data> shimontList = [];
-        var jsonData = json.decode(shimont.body);
-        for (final data in jsonData) {
-          shimontList.add(Data.fromJson(data));
-        }
-        List<String> firstListString =
-            shimontList.map((data) => jsonEncode(data.toJson())).toList();
-        prefs.setStringList(DataType.shimont.toString(), firstListString);
-        prefs.setString(
-            DataType.lastUpdate.toString(), DateTime.now().toString());
-      }
-      var carWashing = await http.get(Uri.parse(Constants.getWash));
-      if (carWashing.statusCode == 200) {
-        List<Data> carWashingList = [];
-        var jsonData = json.decode(carWashing.body);
-        for (final data in jsonData) {
-          carWashingList.add(Data.fromJson(data));
-        }
-        List<String> secondListString =
-            carWashingList.map((data) => jsonEncode(data.toJson())).toList();
-        prefs.setStringList(DataType.carWashing.toString(), secondListString);
-        prefs.setString(
-            DataType.lastUpdate.toString(), DateTime.now().toString());
-      }
-    } catch (e) {
-      CustomLogger.error("Error updating data: $e");
-    }
-  }
+  final Storage storage = Pref(
+      await SharedPreferences.getInstance()
+  );
+
+  final Repository rep = AutoShinLigaRepository(
+    remote: RemoteRepository(
+      url: 'https://auto.shinliga.ru',
+      carwashingEndPoint: '/carwashing.json',
+      shimontEndPoint: '/shimont.json',
+    ),
+    storage:  StorageRepository(storage),
+  );
+  GetIt.instance.registerSingleton<Repository>(rep);
   runApp(const MyApp());
 }
 

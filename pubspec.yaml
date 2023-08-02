@@ -32,6 +32,8 @@ dependencies:
   provider: ^6.0.5
   http: ^1.1.0
   intl: ^0.18.1
+  get_it: ^7.6.0
+  flutter_native_splash: ^2.3.1
 
   cupertino_icons: ^1.0.2
 
@@ -52,4 +54,16 @@ flutter:
     - family: Source Sans Pro
       fonts:
         - asset: lib/assets/fonts/SourceSansPro-SemiBold.ttf
+flutter_native_splash:
+  android: true
+  ios: true
+  color: "FEFF01"
+  image: "lib/assets/logo_liga.png"
+  branding: "lib/assets/branding.png"
+  android_12:
+    image: "lib/assets/logo_liga12.png"
+    color: "FEFF01"
+    image_dark: "lib/assets/logo_liga12.png"
+    color_dark: "FEFF01"
+    branding: "lib/assets/branding12.png"
 
