@@ -55,9 +55,9 @@ class _StartPageState extends State<StartPage> {
                       height: 16,
                     ),
                     Text(
-                      "Подождите, данные грузятся...",
+                      "Секундочку, загружаю данные о точках ТО",
                       style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.normal,), textAlign: TextAlign.center,
                     )
                   ],
                 ),
