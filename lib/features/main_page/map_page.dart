@@ -3,14 +3,12 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:ui';
 import 'dart:math' as math;
-import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:liga_shin_test/features/main_page/widgets/diamondClipper.dart';
 import 'package:liga_shin_test/features/model/search_response.dart';
 import 'package:liga_shin_test/features/services/constants.dart';
-import 'package:liga_shin_test/features/services/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
@@ -138,7 +136,7 @@ class _MapPageState extends State<MapPage> {
           PlacemarkIconStyle(
               image: BitmapDescriptor.fromAssetImage('lib/assets/user.png'),
               rotationType: RotationType.rotate,
-              scale: 1.3),
+              scale: 1.5),
         ),
         mapId: mapObjectId,
         opacity: 1);
@@ -171,9 +169,12 @@ class _MapPageState extends State<MapPage> {
           latitude: appLatLong.lat,
           longitude: appLatLong.long,
         ),
-        icon: PlacemarkIcon.single(PlacemarkIconStyle(
-            image: BitmapDescriptor.fromBytes(await _buildUserIcon()),
-            scale: 1)),
+        icon: PlacemarkIcon.single(
+          PlacemarkIconStyle(
+              image: BitmapDescriptor.fromAssetImage('lib/assets/user.png'),
+              rotationType: RotationType.rotate,
+              scale: 1.5),
+        ),
         mapId: mapObjectId,
         opacity: 1);
     final index = placemarks.indexWhere(
@@ -268,42 +269,6 @@ class _MapPageState extends State<MapPage> {
         .endRecording()
         .toImage(size.width.toInt(), size.height.toInt());
     final pngBytes = await image.toByteData(format: ImageByteFormat.png);
-
-    return pngBytes!.buffer.asUint8List();
-  }
-
-  Future<Uint8List> _buildUserIcon() async {
-    final recorder = ui.PictureRecorder();
-    final canvas = Canvas(recorder);
-    const size = Size(150, 150);
-    const shadowColor = Color(0x50000000);
-
-    final shadowPaint = Paint()
-      ..color = shadowColor
-      ..maskFilter = const MaskFilter.blur(BlurStyle.solid, 20);
-    const shadowOffset = Offset(10, 9);
-    final shadowCircleOffset = Offset(
-      size.width / 2 + shadowOffset.dx,
-      size.height / 2 + shadowOffset.dy,
-    );
-    const radius = 60.0;
-    canvas.drawCircle(shadowCircleOffset, radius, shadowPaint);
-
-    final fillPaint = Paint()
-      ..color = StyleLibrary.color.marker
-      ..style = PaintingStyle.fill;
-    final strokePaint = Paint()
-      ..color = Colors.white
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 10;
-    final circleOffset = Offset(size.width / 2, size.height / 2);
-    canvas.drawCircle(circleOffset, radius, fillPaint);
-    canvas.drawCircle(circleOffset, radius, strokePaint);
-
-    final image = await recorder
-        .endRecording()
-        .toImage(size.width.toInt(), size.height.toInt());
-    final pngBytes = await image.toByteData(format: ui.ImageByteFormat.png);
 
     return pngBytes!.buffer.asUint8List();
   }
