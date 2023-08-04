@@ -563,84 +563,84 @@ class _MapPageState extends State<MapPage> {
             ),
             Align(
               alignment: Alignment.topLeft,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    height: 30,
-                    margin: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        gradient: StyleLibrary.gradient.button),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        findNearestPlacemark();
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.transparent,
-                        shadowColor: Colors.transparent,
-                      ),
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.search, color: Colors.amberAccent),
-                          Text('Найти ближайший'),
-                        ],
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      height: 30,
+                      margin: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          gradient: StyleLibrary.gradient.button),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          findNearestPlacemark();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          shadowColor: Colors.transparent,
+                        ),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.search, color: Colors.amberAccent),
+                            Text('Найти ближайший'),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  Column(
-                    children: [
-                      AnimatedContainer(
-                        duration: const Duration(milliseconds: 500),
-                        height: 30,
-                        width: searchWidth,
-                        margin: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.grey.withOpacity(0.3),
-                        ),
-                        child: TextField(
-                          focusNode: _searchFocusNode,
-                          controller: _textEditingController,
-                          maxLines: 1,
-                          decoration: InputDecoration(
-                            contentPadding: const EdgeInsets.symmetric(
-                                vertical: 10, horizontal: 12),
-                            hintText: 'Поиск города',
-                            prefixIcon: const Icon(
-                              Icons.search,
-                              color: Colors.amber,
-                            ),
-                            suffixIcon: IconButton(
-                              onPressed: () {
-                                _searchFocusNode.unfocus();
-                                setState(() {
-                                  searchResults = [];
-                                  searchWidth = 180;
-                                });
-                              },
-                              icon: const Icon(
-                                Icons.close,
-                                color: Colors.black,
-                              ),
-                            ),
-                            border: InputBorder.none,
-                          ),
-                        ),
-                      ),
-                      if (searchResults.isNotEmpty)
+                    Column(
+                      children: [
                         AnimatedContainer(
+                          duration: const Duration(milliseconds: 500),
+                          height: 30,
                           width: searchWidth,
+                          margin: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            color: Colors.white,
+                            color: Colors.grey.withOpacity(0.3),
                           ),
-                          duration: const Duration(milliseconds: 500),
-                          child: SingleChildScrollView(
+                          child: TextField(
+                            focusNode: _searchFocusNode,
+                            controller: _textEditingController,
+                            maxLines: 1,
+                            decoration: InputDecoration(
+                              contentPadding: const EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: 12),
+                              hintText: 'Поиск города',
+                              prefixIcon: const Icon(
+                                Icons.search,
+                                color: Colors.amber,
+                              ),
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  _searchFocusNode.unfocus();
+                                  setState(() {
+                                    searchResults = [];
+                                    searchWidth = 180;
+                                  });
+                                },
+                                icon: const Icon(
+                                  Icons.close,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              border: InputBorder.none,
+                            ),
+                          ),
+                        ),
+                        if (searchResults.isNotEmpty)
+                          AnimatedContainer(
+                            width: searchWidth,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.white,
+                            ),
+                            duration: const Duration(milliseconds: 500),
                             child: ListView.builder(
                               physics: const NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
@@ -670,10 +670,10 @@ class _MapPageState extends State<MapPage> {
                               },
                             ),
                           ),
-                        ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
             Align(
