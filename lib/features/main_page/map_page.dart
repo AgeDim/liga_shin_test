@@ -104,7 +104,8 @@ class _MapPageState extends State<MapPage> {
   }
 
   Future<void> _initPermission() async {
-    if (!await LocationService().checkPermission()) {await LocationService().requestPermission();
+    if (!await LocationService().checkPermission()) {
+      await LocationService().requestPermission();
     }
     await _fetchCurrentLocation();
     _startLocationUpdates();
@@ -453,54 +454,54 @@ class _MapPageState extends State<MapPage> {
                       child: Row(
                         children: [
                           Expanded(
-                            child: Container(
-                              margin: const EdgeInsets.only(right: 10),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  gradient: StyleLibrary.gradient.button),
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              InfoPage(point: point)));
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.transparent,
-                                  shadowColor: Colors.transparent,
-                                ),
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            InfoPage(point: point)));
+                              },
+                              child: Container(
+                                margin: const EdgeInsets.only(right: 10),
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    gradient: StyleLibrary.gradient.button),
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Icon(Icons.info,
                                         color: StyleLibrary.color.darkBlue),
-                                    const Text('Подробнее'),
+                                    Text(
+                                      'Подробнее',
+                                      style: StyleLibrary.text.white16,
+                                    ),
                                   ],
                                 ),
                               ),
                             ),
                           ),
                           Expanded(
-                            child: Container(
-                              margin: const EdgeInsets.only(right: 10),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  gradient: StyleLibrary.gradient.button),
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  launchNavigation(point);
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.transparent,
-                                  shadowColor: Colors.transparent,
-                                ),
+                            child: GestureDetector(
+                              onTap: () {
+                                launchNavigation(point);
+                              },
+                              child: Container(
+                                margin: const EdgeInsets.only(right: 10),
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    gradient: StyleLibrary.gradient.button),
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    const Text('Поехали'),
+                                    Text(
+                                      'Поехали',
+                                      style: StyleLibrary.text.white16,
+                                    ),
                                     SizedBox(
                                       width: 25,
                                       height: 25,

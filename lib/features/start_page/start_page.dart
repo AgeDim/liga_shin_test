@@ -56,8 +56,11 @@ class _StartPageState extends State<StartPage> {
                     ),
                     Text(
                       "Секундочку, загружаю данные о точках ТО",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.normal,), textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.normal,
+                      ),
+                      textAlign: TextAlign.center,
                     )
                   ],
                 ),
@@ -178,13 +181,12 @@ class _StartPageState extends State<StartPage> {
                                             true)
                                       }
                                   : () => {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const MapPage(
-                                                        type:
-                                                            DataType.shimont)))
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) => const MapPage(
+                                                type: DataType.shimont),
+                                          ),
+                                        )
                                       },
                               child: Column(
                                 children: [

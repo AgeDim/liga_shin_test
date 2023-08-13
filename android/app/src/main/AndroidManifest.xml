@@ -24,6 +24,7 @@
     <application
         android:name="${applicationName}"
         android:usesCleartextTraffic="true"
+        android:roundIcon="@mipmap/round_launcher"
         android:icon="@mipmap/ic_launcher"
         android:label="liga_shin_test">
         <activity

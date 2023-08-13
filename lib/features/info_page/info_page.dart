@@ -88,23 +88,20 @@ class InfoPage extends StatelessWidget {
               margin: const EdgeInsets.all(15),
               child: Text("GPS координаты: ${point.tvCoords}"),
             ),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 15),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  gradient: StyleLibrary.gradient.button),
-              child: ElevatedButton(
-                onPressed: () {
-                  _launchNavigation(point);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.transparent,
-                  shadowColor: Colors.transparent,
-                ),
+            GestureDetector(
+              onTap: () {
+                _launchNavigation(point);
+              },
+              child: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 15),
+                padding: const EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    gradient: StyleLibrary.gradient.button),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('Поехали'),
+                    Text('Поехали', style: StyleLibrary.text.white16,),
                     SizedBox(
                       width: 25,
                       height: 25,
