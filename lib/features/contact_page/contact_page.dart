@@ -42,7 +42,7 @@ class ContactPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.lime,
+        backgroundColor: Color(0xffDEC746),
         title: const Text(
           "Контакты",
           style: TextStyle(color: Colors.black),

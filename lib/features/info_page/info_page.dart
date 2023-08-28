@@ -29,7 +29,7 @@ class InfoPage extends StatelessWidget {
           point.pageTitle,
           style: const TextStyle(color: Colors.black),
         ),
-        backgroundColor: Colors.lime,
+        backgroundColor: Color(0xffDEC746),
         iconTheme: const IconThemeData(color: Colors.black),
       ),
       backgroundColor: Colors.white,

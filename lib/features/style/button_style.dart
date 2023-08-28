@@ -7,7 +7,9 @@ class CustomButtonStyle {
         RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
-      ));
+      ),
+      padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+          EdgeInsets.symmetric(vertical: 20)));
   ButtonStyle? blueButton = ButtonStyle(
       elevation: MaterialStateProperty.all<double>(0),
       backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),

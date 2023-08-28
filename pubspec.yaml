@@ -55,7 +55,7 @@ flutter:
   fonts:
     - family: Montserrat
       fonts:
-        - asset: lib/assets/fonts/Montserrat-Black.ttf
+        - asset: lib/assets/fonts/Montserrat-Medium.ttf
     - family: Source Sans Pro
       fonts:
         - asset: lib/assets/fonts/SourceSansPro-SemiBold.ttf
