@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:liga_shin_test/features/contact_page/contact_page.dart';
 import 'package:liga_shin_test/features/model/data.dart';
 import 'package:liga_shin_test/features/model/data_provider.dart';
@@ -159,23 +161,26 @@ class _StartPageState extends State<StartPage> {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 const Icon(
-                                  Icons.refresh_rounded,
+                                  Ionicons.sync_outline,
                                   color: Colors.black,
-                                  size: 50,
+                                  size: 35,
                                 ),
                                 Container(
-                                  padding: EdgeInsets.all(5),
+                                  padding: const EdgeInsets.all(5),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
                                       Text(
                                         'Обновить данные',
-                                        style: StyleLibrary.text.black20,
+                                        style: StyleLibrary.text.black10,
                                       ),
-                                      Text(
-                                        'Данные от: ${formatDate(updatedTime)}',
-                                        style: StyleLibrary.text.gray12,
-                                        textAlign: TextAlign.right,
+                                      Container(
+                                        padding: const EdgeInsets.only(top: 8),
+                                        child: Text(
+                                          'Данные от: ${formatDate(updatedTime)}',
+                                          style: StyleLibrary.text.gray7,
+                                          textAlign: TextAlign.right,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -184,7 +189,7 @@ class _StartPageState extends State<StartPage> {
                             ),
                           ),
                         ),
-                        Image.asset('lib/assets/logo.png')
+                        SvgPicture.asset('lib/assets/logo.svg')
                       ],
                     ),
                   ),
@@ -222,10 +227,13 @@ class _StartPageState extends State<StartPage> {
                                     },
                             child: Column(
                               children: [
-                                Image.asset('lib/assets/tire.png'),
-                                Text(
-                                  'Шиномонтажи',
-                                  style: StyleLibrary.text.black20,
+                                SvgPicture.asset('lib/assets/tire.svg'),
+                                Container(
+                                  padding: const EdgeInsets.only(top: 10),
+                                  child: Text(
+                                    'Шиномонтажи',
+                                    style: StyleLibrary.text.black20,
+                                  ),
                                 ),
                               ],
                             ),
@@ -257,10 +265,13 @@ class _StartPageState extends State<StartPage> {
                                     },
                             child: Column(
                               children: [
-                                Image.asset('lib/assets/car-wash.png'),
-                                Text(
-                                  'Мойки',
-                                  style: StyleLibrary.text.black20,
+                                SvgPicture.asset('lib/assets/car-wash.svg'),
+                                Container(
+                                  padding: const EdgeInsets.only(top: 10),
+                                  child: Text(
+                                    'Мойки',
+                                    style: StyleLibrary.text.black20,
+                                  ),
                                 ),
                               ],
                             ),
@@ -284,10 +295,13 @@ class _StartPageState extends State<StartPage> {
                             },
                             child: Column(
                               children: [
-                                Image.asset('lib/assets/contact-mail.png'),
-                                Text(
-                                  'Контакты',
-                                  style: StyleLibrary.text.black20,
+                                SvgPicture.asset('lib/assets/contact-mail.svg'),
+                                Container(
+                                  padding: const EdgeInsets.only(top: 10),
+                                  child: Text(
+                                    'Контакты',
+                                    style: StyleLibrary.text.black20,
+                                  ),
                                 ),
                               ],
                             ),
@@ -305,10 +319,13 @@ class _StartPageState extends State<StartPage> {
                             },
                             child: Column(
                               children: [
-                                Image.asset('lib/assets/hot-sale.png'),
-                                Text(
-                                  'Промо',
-                                  style: StyleLibrary.text.black20,
+                                SvgPicture.asset('lib/assets/hot-sale.svg'),
+                                Container(
+                                  padding: const EdgeInsets.only(top: 10),
+                                  child: Text(
+                                    'Промо',
+                                    style: StyleLibrary.text.black20,
+                                  ),
                                 ),
                               ],
                             ),
