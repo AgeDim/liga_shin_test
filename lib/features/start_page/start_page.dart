@@ -163,7 +163,7 @@ class _StartPageState extends State<StartPage> {
                                 const Icon(
                                   Ionicons.sync_outline,
                                   color: Colors.black,
-                                  size: 35,
+                                  size: 40,
                                 ),
                                 Container(
                                   padding: const EdgeInsets.all(5),
@@ -172,13 +172,13 @@ class _StartPageState extends State<StartPage> {
                                     children: [
                                       Text(
                                         'Обновить данные',
-                                        style: StyleLibrary.text.black10,
+                                        style: StyleLibrary.text.black14,
                                       ),
                                       Container(
                                         padding: const EdgeInsets.only(top: 8),
                                         child: Text(
                                           'Данные от: ${formatDate(updatedTime)}',
-                                          style: StyleLibrary.text.gray7,
+                                          style: StyleLibrary.text.gray12,
                                           textAlign: TextAlign.right,
                                         ),
                                       ),

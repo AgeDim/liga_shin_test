@@ -324,6 +324,13 @@ class _MapPageState extends State<MapPage> {
             setState(() {
               selectedPlacemark = placemark;
             });
+            Data temp = getServiceStationByName(placemark.mapId.value);
+            _moveToCurrentLocation(
+                AppLatLong(
+                  lat: double.parse(temp.tvCoords.split(',')[0]),
+                  long: double.parse(temp.tvCoords.split(',')[1]),
+                ),
+                13);
           },
           icon: PlacemarkIcon.single(PlacemarkIconStyle(
               image: BitmapDescriptor.fromAssetImage('lib/assets/point.png'),
@@ -352,8 +359,8 @@ class _MapPageState extends State<MapPage> {
         _moveToCurrentLocation(
             AppLatLong(
                 lat: cluster.appearance.point.latitude,
-                long: cluster.appearance.point.longitude),13
-            );
+                long: cluster.appearance.point.longitude),
+            13);
       },
     );
     setState(() {
@@ -580,16 +587,19 @@ class _MapPageState extends State<MapPage> {
                 ),
               ),
             ),
+            if (selectedPlacemark != null)
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Card(
+                  margin: EdgeInsets.zero,
+                    child: SelectedPlacemarkCard(
+                  point: getServiceStationByName(selectedPlacemark!.mapId.value),
+                  close: close,
+                )),
+              )
           ],
         ),
       ),
-      bottomNavigationBar: selectedPlacemark != null
-          ? Card(
-              child: SelectedPlacemarkCard(
-              point: getServiceStationByName(selectedPlacemark!.mapId.value),
-              close: close,
-            ))
-          : null,
     );
   }
 }

@@ -35,7 +35,7 @@ class SelectedPlacemarkCard extends StatelessWidget {
             children: [
               Flexible(
                 child: Container(
-                  margin: const EdgeInsets.all(5),
+                  padding: const EdgeInsets.all(5),
                   child: Text(
                     point.pageTitle,
                     style: const TextStyle(fontWeight: FontWeight.bold),
