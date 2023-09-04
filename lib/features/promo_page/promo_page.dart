@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 
 import '../services/constants.dart';
 import '../services/logger.dart';
+import '../style/style_library.dart';
 
 class PromoPage extends StatefulWidget {
   static const routeName = '/promoPage';
@@ -77,10 +78,11 @@ class _PromoPageState extends State<PromoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xffDEC746),
-        title: const Text(
+        centerTitle: true,
+        backgroundColor: const Color(0xffDEC746),
+        title: Text(
           "Промо",
-          style: TextStyle(color: Colors.black),
+          style: StyleLibrary.text.black16,
         ),
         iconTheme: const IconThemeData(color: Colors.black),
       ),
