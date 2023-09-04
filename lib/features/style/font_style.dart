@@ -21,6 +21,11 @@ class FontStyle {
       fontSize: 10,
       color: Colors.black,
       fontWeight: FontWeight.normal);
+  TextStyle black18 = const TextStyle(
+      fontFamily: 'Montserrat',
+      fontSize: 18,
+      color: Colors.black,
+      fontWeight: FontWeight.normal);
   TextStyle white16 = const TextStyle(
       fontFamily: 'Montserrat', fontSize: 16, color: Colors.white);
   TextStyle gray12 = const TextStyle(

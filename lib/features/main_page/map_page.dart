@@ -591,11 +591,12 @@ class _MapPageState extends State<MapPage> {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Card(
-                  margin: EdgeInsets.zero,
+                    margin: EdgeInsets.zero,
                     child: SelectedPlacemarkCard(
-                  point: getServiceStationByName(selectedPlacemark!.mapId.value),
-                  close: close,
-                )),
+                      point: getServiceStationByName(
+                          selectedPlacemark!.mapId.value),
+                      close: close,
+                    )),
               )
           ],
         ),

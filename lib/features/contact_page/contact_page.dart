@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:liga_shin_test/features/services/constants.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../style/style_library.dart';
+
 class ContactPage extends StatelessWidget {
   static const routeName = '/contactPage';
 
@@ -42,10 +44,11 @@ class ContactPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xffDEC746),
-        title: const Text(
+        centerTitle: true,
+        backgroundColor: const Color(0xffDEC746),
+        title: Text(
           "Контакты",
-          style: TextStyle(color: Colors.black),
+          style: StyleLibrary.text.black16,
         ),
         iconTheme: const IconThemeData(color: Colors.black),
       ),
