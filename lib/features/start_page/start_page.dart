@@ -123,26 +123,26 @@ class _StartPageState extends State<StartPage> {
         ),
         SafeArea(
           child: Scaffold(
-            backgroundColor:  Colors.transparent,
+            backgroundColor: Colors.transparent,
             body: Container(
               decoration: const BoxDecoration(
                   gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
-                      colors:[ Color(0x00e0cb52), Color(0xffDEC746),]
-                  )
-              ),
+                      colors: [
+                    Color(0x00e0cb52),
+                    Color(0xffDEC746),
+                  ])),
               alignment: Alignment.center,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Container(
                         alignment: Alignment.centerRight,
-                        margin: const EdgeInsets.only(
-                            top: 20, right: 20),
+                        margin: const EdgeInsets.only(top: 20, right: 20),
                         child: ElevatedButton(
                           onPressed: () {
                             _initData();
@@ -150,10 +150,10 @@ class _StartPageState extends State<StartPage> {
                           },
                           style: ButtonStyle(
                             padding:
-                            MaterialStateProperty.all<EdgeInsetsGeometry>(
-                                const EdgeInsets.all(10)),
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                                Colors.white),
+                                MaterialStateProperty.all<EdgeInsetsGeometry>(
+                                    const EdgeInsets.all(10)),
+                            backgroundColor:
+                                MaterialStateProperty.all<Color>(Colors.white),
                             elevation: MaterialStateProperty.all<double>(0),
                             shape: MaterialStateProperty.all<
                                 RoundedRectangleBorder>(
@@ -195,9 +195,9 @@ class _StartPageState extends State<StartPage> {
                           ),
                         ),
                       ),
-                      SvgPicture.asset('lib/assets/logo.svg')
                     ],
                   ),
+                  SvgPicture.asset('lib/assets/logo.svg'),
                   if (!isLoading)
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -207,26 +207,28 @@ class _StartPageState extends State<StartPage> {
                           children: [
                             Expanded(
                               child: Container(
-                                margin: const EdgeInsets.only(left: 20, right: 7.5),
+                                margin:
+                                    const EdgeInsets.only(left: 20, right: 7.5),
                                 child: ElevatedButton(
                                   style: StyleLibrary.button.defaultButton,
                                   onPressed: Provider.of<DataProvider>(context)
-                                      .getShimont
-                                      .isEmpty
+                                          .getShimont
+                                          .isEmpty
                                       ? () => {
-                                    SnackBarService.showSnackBar(
-                                        context,
-                                        "Нет данных для отображения, пожалуйста обновите данные",
-                                        true)
-                                  }
+                                            SnackBarService.showSnackBar(
+                                                context,
+                                                "Нет данных для отображения, пожалуйста обновите данные",
+                                                true)
+                                          }
                                       : () => {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) => const MapPage(
-                                            type: DataType.shimont),
-                                      ),
-                                    )
-                                  },
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const MapPage(
+                                                        type: DataType.shimont),
+                                              ),
+                                            )
+                                          },
                                   child: Column(
                                     children: [
                                       SvgPicture.asset('lib/assets/tire.svg'),
@@ -246,30 +248,32 @@ class _StartPageState extends State<StartPage> {
                             ),
                             Expanded(
                               child: Container(
-                                margin: const EdgeInsets.only(left: 7.5, right: 20),
+                                margin:
+                                    const EdgeInsets.only(left: 7.5, right: 20),
                                 child: ElevatedButton(
                                   style: StyleLibrary.button.defaultButton,
                                   onPressed: Provider.of<DataProvider>(context)
-                                      .getCarWashing
-                                      .isEmpty
+                                          .getCarWashing
+                                          .isEmpty
                                       ? () => {
-                                    SnackBarService.showSnackBar(
-                                        context,
-                                        "Нет данных для отображения, пожалуйста обновите данные",
-                                        true)
-                                  }
+                                            SnackBarService.showSnackBar(
+                                                context,
+                                                "Нет данных для отображения, пожалуйста обновите данные",
+                                                true)
+                                          }
                                       : () => {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                            const MapPage(
-                                                type:
-                                                DataType.carWashing)))
-                                  },
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const MapPage(
+                                                            type: DataType
+                                                                .carWashing)))
+                                          },
                                   child: Column(
                                     children: [
-                                      SvgPicture.asset('lib/assets/car-wash.svg'),
+                                      SvgPicture.asset(
+                                          'lib/assets/car-wash.svg'),
                                       Container(
                                         padding: const EdgeInsets.only(top: 10),
                                         child: FittedBox(
@@ -292,7 +296,7 @@ class _StartPageState extends State<StartPage> {
                             Expanded(
                               child: Container(
                                 margin: const EdgeInsets.only(
-                                    left: 20, right: 7.5, top: 10),
+                                    left: 20, right: 7.5, top: 10, bottom: 10),
                                 child: ElevatedButton(
                                   style: StyleLibrary.button.defaultButton,
                                   onPressed: () {
@@ -301,7 +305,8 @@ class _StartPageState extends State<StartPage> {
                                   },
                                   child: Column(
                                     children: [
-                                      SvgPicture.asset('lib/assets/contact-mail.svg'),
+                                      SvgPicture.asset(
+                                          'lib/assets/contact-mail.svg'),
                                       Container(
                                         padding: const EdgeInsets.only(top: 10),
                                         child: FittedBox(
@@ -319,15 +324,17 @@ class _StartPageState extends State<StartPage> {
                             Expanded(
                               child: Container(
                                 margin: const EdgeInsets.only(
-                                    left: 7.5, right: 20, top: 10),
+                                    left: 7.5, right: 20, top: 10, bottom: 10),
                                 child: ElevatedButton(
                                   style: StyleLibrary.button.defaultButton,
                                   onPressed: () {
-                                    Navigator.pushNamed(context, PromoPage.routeName);
+                                    Navigator.pushNamed(
+                                        context, PromoPage.routeName);
                                   },
                                   child: Column(
                                     children: [
-                                      SvgPicture.asset('lib/assets/hot-sale.svg'),
+                                      SvgPicture.asset(
+                                          'lib/assets/hot-sale.svg'),
                                       Container(
                                         padding: const EdgeInsets.only(top: 10),
                                         child: FittedBox(
