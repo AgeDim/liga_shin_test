@@ -113,249 +113,245 @@ class _StartPageState extends State<StartPage> {
   @override
   Widget build(BuildContext context) {
     _setUpdTime();
-    return Scaffold(
-      backgroundColor: const Color(0xffDEC746),
-      body: SingleChildScrollView(
-        child: Container(
-          margin: const EdgeInsets.only(bottom: 20),
-          alignment: Alignment.center,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Stack(
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: Image.asset(
+            'lib/assets/background.png',
+            fit: BoxFit.cover,
+          ),
+        ),
+        SafeArea(
+          child: Scaffold(
+            backgroundColor:  Colors.transparent,
+            body: Container(
+              decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors:[ Color(0x00e0cb52), Color(0xffDEC746),]
+                  )
+              ),
+              alignment: Alignment.center,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Positioned.fill(
-                    child: Image.asset(
-                      'lib/assets/background.png',
-                      fit: BoxFit.cover,
-                    ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        alignment: Alignment.centerRight,
+                        margin: const EdgeInsets.only(
+                            top: 20, right: 20),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            _initData();
+                            _setUpdTime();
+                          },
+                          style: ButtonStyle(
+                            padding:
+                            MaterialStateProperty.all<EdgeInsetsGeometry>(
+                                const EdgeInsets.all(10)),
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                Colors.white),
+                            elevation: MaterialStateProperty.all<double>(0),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              const Icon(
+                                Ionicons.sync_outline,
+                                color: Colors.black,
+                                size: 40,
+                              ),
+                              Container(
+                                padding: const EdgeInsets.all(5),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      'Обновить данные',
+                                      style: StyleLibrary.text.black14,
+                                    ),
+                                    Container(
+                                      padding: const EdgeInsets.only(top: 8),
+                                      child: Text(
+                                        'Данные от ${formatDate(updatedTime)}',
+                                        style: StyleLibrary.text.gray12,
+                                        textAlign: TextAlign.right,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SvgPicture.asset('lib/assets/logo.svg')
+                    ],
                   ),
-                  SafeArea(
-                    child: SizedBox(
-                      height: 470,
-                      child: Column(
-                        children: [
-                          Container(
-                            alignment: Alignment.centerRight,
-                            margin: const EdgeInsets.only(
-                                top: 20, right: 20, bottom: 40),
-                            child: ElevatedButton(
-                              onPressed: () {
-                                _initData();
-                                _setUpdTime();
-                              },
-                              style: ButtonStyle(
-                                padding: MaterialStateProperty.all<
-                                        EdgeInsetsGeometry>(
-                                    const EdgeInsets.all(10)),
-                                backgroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        Colors.white),
-                                elevation: MaterialStateProperty.all<double>(0),
-                                shape: MaterialStateProperty.all<
-                                    RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
+                  if (!isLoading)
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Container(
+                                margin: const EdgeInsets.only(left: 20, right: 7.5),
+                                child: ElevatedButton(
+                                  style: StyleLibrary.button.defaultButton,
+                                  onPressed: Provider.of<DataProvider>(context)
+                                      .getShimont
+                                      .isEmpty
+                                      ? () => {
+                                    SnackBarService.showSnackBar(
+                                        context,
+                                        "Нет данных для отображения, пожалуйста обновите данные",
+                                        true)
+                                  }
+                                      : () => {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => const MapPage(
+                                            type: DataType.shimont),
+                                      ),
+                                    )
+                                  },
+                                  child: Column(
+                                    children: [
+                                      SvgPicture.asset('lib/assets/tire.svg'),
+                                      Container(
+                                        padding: const EdgeInsets.only(top: 10),
+                                        child: FittedBox(
+                                          child: Text(
+                                            'Шиномонтажи',
+                                            style: StyleLibrary.text.black20,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  const Icon(
-                                    Ionicons.sync_outline,
-                                    color: Colors.black,
-                                    size: 40,
-                                  ),
-                                  Container(
-                                    padding: const EdgeInsets.all(5),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: [
-                                        Text(
-                                          'Обновить данные',
-                                          style: StyleLibrary.text.black14,
-                                        ),
-                                        Container(
-                                          padding:
-                                              const EdgeInsets.only(top: 8),
-                                          child: Text(
-                                            'Данные от: ${formatDate(updatedTime)}',
-                                            style: StyleLibrary.text.gray12,
-                                            textAlign: TextAlign.right,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
                             ),
-                          ),
-                          SvgPicture.asset('lib/assets/logo.svg')
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              if (!isLoading)
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Container(
-                            margin: const EdgeInsets.only(left: 20, right: 7.5),
-                            child: ElevatedButton(
-                              style: StyleLibrary.button.defaultButton,
-                              onPressed: Provider.of<DataProvider>(context)
-                                      .getShimont
-                                      .isEmpty
-                                  ? () => {
-                                        SnackBarService.showSnackBar(
-                                            context,
-                                            "Нет данных для отображения, пожалуйста обновите данные",
-                                            true)
-                                      }
-                                  : () => {
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (context) => const MapPage(
-                                                type: DataType.shimont),
-                                          ),
-                                        )
-                                      },
-                              child: Column(
-                                children: [
-                                  SvgPicture.asset('lib/assets/tire.svg'),
-                                  Container(
-                                    padding: const EdgeInsets.only(top: 10),
-                                    child: FittedBox(
-                                      child: Text(
-                                        'Шиномонтажи',
-                                        textAlign: TextAlign.center,
-                                        style: StyleLibrary.text.black18,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Container(
-                            margin: const EdgeInsets.only(left: 7.5, right: 20),
-                            child: ElevatedButton(
-                              style: StyleLibrary.button.defaultButton,
-                              onPressed: Provider.of<DataProvider>(context)
+                            Expanded(
+                              child: Container(
+                                margin: const EdgeInsets.only(left: 7.5, right: 20),
+                                child: ElevatedButton(
+                                  style: StyleLibrary.button.defaultButton,
+                                  onPressed: Provider.of<DataProvider>(context)
                                       .getCarWashing
                                       .isEmpty
-                                  ? () => {
-                                        SnackBarService.showSnackBar(
-                                            context,
-                                            "Нет данных для отображения, пожалуйста обновите данные",
-                                            true)
-                                      }
-                                  : () => {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const MapPage(
-                                                        type: DataType
-                                                            .carWashing)))
-                                      },
-                              child: Column(
-                                children: [
-                                  SvgPicture.asset('lib/assets/car-wash.svg'),
-                                  Container(
-                                    padding: const EdgeInsets.only(top: 10),
-                                    child: FittedBox(
-                                      child: Text(
-                                        'Мойки',
-                                        style: StyleLibrary.text.black18,
+                                      ? () => {
+                                    SnackBarService.showSnackBar(
+                                        context,
+                                        "Нет данных для отображения, пожалуйста обновите данные",
+                                        true)
+                                  }
+                                      : () => {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                            const MapPage(
+                                                type:
+                                                DataType.carWashing)))
+                                  },
+                                  child: Column(
+                                    children: [
+                                      SvgPicture.asset('lib/assets/car-wash.svg'),
+                                      Container(
+                                        padding: const EdgeInsets.only(top: 10),
+                                        child: FittedBox(
+                                          child: Text(
+                                            'Мойки',
+                                            style: StyleLibrary.text.black20,
+                                          ),
+                                        ),
                                       ),
-                                    ),
+                                    ],
                                   ),
-                                ],
+                                ),
                               ),
                             ),
-                          ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Container(
+                                margin: const EdgeInsets.only(
+                                    left: 20, right: 7.5, top: 10),
+                                child: ElevatedButton(
+                                  style: StyleLibrary.button.defaultButton,
+                                  onPressed: () {
+                                    Navigator.pushNamed(
+                                        context, ContactPage.routeName);
+                                  },
+                                  child: Column(
+                                    children: [
+                                      SvgPicture.asset('lib/assets/contact-mail.svg'),
+                                      Container(
+                                        padding: const EdgeInsets.only(top: 10),
+                                        child: FittedBox(
+                                          child: Text(
+                                            'Контакты',
+                                            style: StyleLibrary.text.black20,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: Container(
+                                margin: const EdgeInsets.only(
+                                    left: 7.5, right: 20, top: 10),
+                                child: ElevatedButton(
+                                  style: StyleLibrary.button.defaultButton,
+                                  onPressed: () {
+                                    Navigator.pushNamed(context, PromoPage.routeName);
+                                  },
+                                  child: Column(
+                                    children: [
+                                      SvgPicture.asset('lib/assets/hot-sale.svg'),
+                                      Container(
+                                        padding: const EdgeInsets.only(top: 10),
+                                        child: FittedBox(
+                                          child: Text(
+                                            'Промо',
+                                            style: StyleLibrary.text.black20,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Container(
-                            margin: const EdgeInsets.only(
-                                left: 20, right: 7.5, top: 10),
-                            child: ElevatedButton(
-                              style: StyleLibrary.button.defaultButton,
-                              onPressed: () {
-                                Navigator.pushNamed(
-                                    context, ContactPage.routeName);
-                              },
-                              child: Column(
-                                children: [
-                                  SvgPicture.asset(
-                                      'lib/assets/contact-mail.svg'),
-                                  Container(
-                                    padding: const EdgeInsets.only(top: 10),
-                                    child: FittedBox(
-                                      child: Text(
-                                        'Контакты',
-                                        style: StyleLibrary.text.black18,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Container(
-                            margin: const EdgeInsets.only(
-                                left: 7.5, right: 20, top: 10),
-                            child: ElevatedButton(
-                              style: StyleLibrary.button.defaultButton,
-                              onPressed: () {
-                                Navigator.pushNamed(
-                                    context, PromoPage.routeName);
-                              },
-                              child: Column(
-                                children: [
-                                  SvgPicture.asset('lib/assets/hot-sale.svg'),
-                                  Container(
-                                    padding: const EdgeInsets.only(top: 10),
-                                    child: FittedBox(
-                                      child: Text(
-                                        'Промо',
-                                        style: StyleLibrary.text.black18,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-            ],
+                ],
+              ),
+            ),
           ),
         ),
-      ),
+      ],
     );
   }
 }

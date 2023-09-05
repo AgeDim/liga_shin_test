@@ -30,6 +30,7 @@ dependencies:
   yandex_mapkit: ^3.3.3
   geolocator: ^9.0.2
   url_launcher: ^6.1.12
+  maps_launcher: ^2.2.0
   shared_preferences: ^2.2.0
   provider: ^6.0.5
   http: ^1.1.0

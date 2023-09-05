@@ -1,24 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:liga_shin_test/features/model/data.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:maps_launcher/maps_launcher.dart';
 
 import '../main_page/widgets/diamondClipper.dart';
 import '../style/style_library.dart';
 
 class InfoPage extends StatelessWidget {
   final Data point;
+  final String label;
 
-  const InfoPage({super.key, required this.point});
-
-  Future<void> _launchNavigation(Data st) async {
-    final url =
-        'geo:${double.parse(point.tvCoords.split(',')[0])},${double.parse(point.tvCoords.split(',')[1])}';
-    if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url));
-    } else {
-      throw 'Could not launch navigation';
-    }
-  }
+  const InfoPage({super.key, required this.point, required this.label});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +17,7 @@ class InfoPage extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          point.pageTitle,
+          label,
           style: StyleLibrary.text.black16,
         ),
         backgroundColor: const Color(0xffDEC746),
@@ -90,7 +81,9 @@ class InfoPage extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
-                _launchNavigation(point);
+                MapsLauncher.launchCoordinates(
+                    double.parse(point.tvCoords.split(',')[0]),
+                    double.parse(point.tvCoords.split(',')[1]));
               },
               child: Container(
                 margin: const EdgeInsets.symmetric(horizontal: 15),
@@ -101,7 +94,10 @@ class InfoPage extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Поехали', style: StyleLibrary.text.white16,),
+                    Text(
+                      'Поехали',
+                      style: StyleLibrary.text.white16,
+                    ),
                     SizedBox(
                       width: 25,
                       height: 25,

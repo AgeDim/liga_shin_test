@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:maps_launcher/maps_launcher.dart';
 
 import '../../info_page/info_page.dart';
 import '../../model/data.dart';
@@ -8,20 +8,14 @@ import 'diamondClipper.dart';
 
 class SelectedPlacemarkCard extends StatelessWidget {
   final Data point;
+  final String label;
   final Function() close;
 
   const SelectedPlacemarkCard(
-      {super.key, required this.point, required this.close});
-
-  Future<void> _launchNavigation(dynamic st) async {
-    final url =
-        'geo:${double.parse(point.tvCoords.split(',')[0])},${double.parse(point.tvCoords.split(',')[1])}';
-    if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url));
-    } else {
-      throw 'Could not launch navigation';
-    }
-  }
+      {super.key,
+      required this.point,
+      required this.close,
+      required this.label});
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +67,7 @@ class SelectedPlacemarkCard extends StatelessWidget {
                       style: const TextStyle(color: Colors.white),
                     ),
                   ),
-                if(point.tvDistance != null)
+                if (point.tvDistance != null)
                   Flexible(
                     child: Container(
                       padding: const EdgeInsets.all(10),
@@ -96,50 +90,55 @@ class SelectedPlacemarkCard extends StatelessWidget {
             child: Row(
               children: [
                 Expanded(
-                  child: Container(
-                    margin: const EdgeInsets.only(right: 10),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        gradient: StyleLibrary.gradient.button),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => InfoPage(point: point)));
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.transparent,
-                        shadowColor: Colors.transparent,
-                      ),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => InfoPage(
+                                    point: point,
+                                    label: label,
+                                  )));
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 5),
+                      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          gradient: StyleLibrary.gradient.button),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Icon(Icons.info, color: StyleLibrary.color.darkBlue),
-                          const Text('Подробнее'),
+                          Text(
+                            'Подробнее',
+                            style: StyleLibrary.text.white16,
+                          ),
                         ],
                       ),
                     ),
                   ),
                 ),
                 Expanded(
-                  child: Container(
-                    margin: const EdgeInsets.only(right: 10),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        gradient: StyleLibrary.gradient.button),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        _launchNavigation(point);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.transparent,
-                        shadowColor: Colors.transparent,
-                      ),
+                  child: GestureDetector(
+                    onTap: () {
+                      MapsLauncher.launchCoordinates(
+                          double.parse(point.tvCoords.split(',')[0]),
+                          double.parse(point.tvCoords.split(',')[1]));
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 5),
+                      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          gradient: StyleLibrary.gradient.button),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text('Поехали'),
+                          Text(
+                            'Поехали',
+                            style: StyleLibrary.text.white16,
+                          ),
                           SizedBox(
                             width: 25,
                             height: 25,

@@ -43,13 +43,13 @@ class ContactPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar:  AppBar(
         centerTitle: true,
-        backgroundColor: const Color(0xffDEC746),
         title: Text(
-          "Контакты",
+          'Контакты',
           style: StyleLibrary.text.black16,
         ),
+        backgroundColor: const Color(0xffDEC746),
         iconTheme: const IconThemeData(color: Colors.black),
       ),
       body: SafeArea(

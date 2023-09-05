@@ -31,7 +31,7 @@ class FontStyle {
   TextStyle gray12 = const TextStyle(
     fontFamily: 'Montserrat',
     fontSize: 12,
-    color: Color(0xFF3A3A3A),
+    color: Color(0xFF4C4C4C),
   );
   TextStyle gray7 = const TextStyle(
     fontFamily: 'Montserrat',

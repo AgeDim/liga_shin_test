@@ -10,7 +10,6 @@ import 'package:liga_shin_test/features/main_page/widgets/selected_placemark_car
 import 'package:liga_shin_test/features/model/search_response.dart';
 import 'package:liga_shin_test/features/services/constants.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 import 'package:http/http.dart' as http;
 
@@ -368,16 +367,6 @@ class _MapPageState extends State<MapPage> {
     });
   }
 
-  Future<void> launchNavigation(Data st) async {
-    final url =
-        'geo:${double.parse(st.tvCoords.split(',')[0])},${double.parse(st.tvCoords.split(',')[1])}';
-    if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url));
-    } else {
-      throw 'Could not launch navigation';
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     setState(() {
@@ -596,6 +585,9 @@ class _MapPageState extends State<MapPage> {
                       point: getServiceStationByName(
                           selectedPlacemark!.mapId.value),
                       close: close,
+                      label: widget.type == DataType.shimont
+                          ? 'Шиномонтаж'
+                          : 'Мойка',
                     )),
               )
           ],
