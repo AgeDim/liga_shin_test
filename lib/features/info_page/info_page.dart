@@ -79,41 +79,52 @@ class InfoPage extends StatelessWidget {
               margin: const EdgeInsets.all(15),
               child: Text("GPS координаты: ${point.tvCoords}"),
             ),
-            GestureDetector(
-              onTap: () {
-                MapsLauncher.launchCoordinates(
-                    double.parse(point.tvCoords.split(',')[0]),
-                    double.parse(point.tvCoords.split(',')[1]));
-              },
-              child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 15),
-                padding: const EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    gradient: StyleLibrary.gradient.button),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Поехали',
-                      style: StyleLibrary.text.white16,
+            Container(
+              margin: const EdgeInsets.all(15),
+              child: ElevatedButton(
+                onPressed: () {
+                  MapsLauncher.launchCoordinates(
+                      double.parse(point.tvCoords.split(',')[0]),
+                      double.parse(point.tvCoords.split(',')[1]));
+                },
+                style: ButtonStyle(
+                    shape:
+                    MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
                     ),
-                    SizedBox(
-                      width: 25,
-                      height: 25,
-                      child: ClipPath(
-                        clipper: DiamondClipper(),
-                        child: Container(
-                          color: Colors.amberAccent,
-                          child: const Icon(
-                            Icons.turn_right,
-                            color: Colors.red,
-                            size: 23,
+                    padding: MaterialStateProperty.all<EdgeInsets>(
+                        EdgeInsets.zero)),
+                child: Ink(
+                  decoration: BoxDecoration(
+                      gradient: StyleLibrary.gradient.button,
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    constraints: const BoxConstraints(minHeight: 50.0),
+                    alignment: Alignment.center,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('Поехали'),
+                        SizedBox(
+                          width: 25,
+                          height: 25,
+                          child: ClipPath(
+                            clipper: DiamondClipper(),
+                            child: Container(
+                              color: Colors.amberAccent,
+                              child: const Icon(
+                                Icons.turn_right,
+                                color: Colors.red,
+                                size: 23,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
             ),
