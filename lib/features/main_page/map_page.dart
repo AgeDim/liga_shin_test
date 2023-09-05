@@ -587,7 +587,7 @@ class _MapPageState extends State<MapPage> {
                       close: close,
                       label: widget.type == DataType.shimont
                           ? 'Шиномонтаж'
-                          : 'Мойка',
+                          : 'Мойка', userLocation: AppLatLong(lat: userLocationMarker!.point.latitude, long: userLocationMarker!.point.longitude),
                     )),
               )
           ],

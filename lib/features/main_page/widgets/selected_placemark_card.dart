@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:liga_shin_test/features/model/location/app_lat_long.dart';
 import 'package:maps_launcher/maps_launcher.dart';
 
 import '../../info_page/info_page.dart';
@@ -10,12 +12,25 @@ class SelectedPlacemarkCard extends StatelessWidget {
   final Data point;
   final String label;
   final Function() close;
+  final AppLatLong userLocation;
 
   const SelectedPlacemarkCard(
       {super.key,
       required this.point,
       required this.close,
-      required this.label});
+      required this.label,
+      required this.userLocation});
+
+  int calculateDistance(AppLatLong userLocation, double lat, double long) {
+    double distance = Geolocator.distanceBetween(
+      userLocation.lat,
+      userLocation.long,
+      lat,
+      long,
+    );
+
+    return distance.toInt();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +92,7 @@ class SelectedPlacemarkCard extends StatelessWidget {
                         borderRadius: BorderRadius.all(Radius.circular(25)),
                       ),
                       child: Text(
-                        '${point.tvDistance} км от Москвы',
+                        '${calculateDistance(userLocation, double.parse(point.tvCoords.split(',')[0]), double.parse(point.tvCoords.split(',')[1]))} м от Вас',
                         style: const TextStyle(color: Colors.white),
                       ),
                     ),
@@ -102,7 +117,8 @@ class SelectedPlacemarkCard extends StatelessWidget {
                     },
                     child: Container(
                       margin: const EdgeInsets.symmetric(horizontal: 5),
-                      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 15, vertical: 10),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                           gradient: StyleLibrary.gradient.button),
@@ -128,7 +144,8 @@ class SelectedPlacemarkCard extends StatelessWidget {
                     },
                     child: Container(
                       margin: const EdgeInsets.symmetric(horizontal: 5),
-                      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 15, vertical: 10),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
                           gradient: StyleLibrary.gradient.button),
