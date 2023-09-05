@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
@@ -5,6 +7,7 @@ import 'package:ionicons/ionicons.dart';
 import 'package:liga_shin_test/features/contact_page/contact_page.dart';
 import 'package:liga_shin_test/features/model/data.dart';
 import 'package:liga_shin_test/features/model/data_provider.dart';
+import 'package:liga_shin_test/features/start_page/service_card/servicee_card.dart';
 import 'package:liga_shin_test/features/style/style_library.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -110,6 +113,63 @@ class _StartPageState extends State<StartPage> {
     });
   }
 
+  Widget getCard(index) {
+    final cards = [
+      ServiceCard(
+        onTap: context.read<DataProvider>().getShimont.isEmpty
+            ? () {
+                SnackBarService.showSnackBar(
+                    context,
+                    "Нет данных для отображения, пожалуйста обновите данные",
+                    true);
+              }
+            : () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const MapPage(type: DataType.shimont),
+                  ),
+                );
+              },
+        name: 'Шиномонтаж',
+        image: SvgPicture.asset('lib/assets/tire.svg'),
+      ),
+      ServiceCard(
+        onTap: context.read<DataProvider>().getCarWashing.isEmpty
+            ? () => {
+                  SnackBarService.showSnackBar(
+                      context,
+                      "Нет данных для отображения, пожалуйста обновите данные",
+                      true)
+                }
+            : () => {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              const MapPage(type: DataType.carWashing)))
+                },
+        name: 'Мойки',
+        image: SvgPicture.asset('lib/assets/car-wash.svg'),
+      ),
+      ServiceCard(
+        onTap: () {
+          Navigator.pushNamed(context, ContactPage.routeName);
+        },
+        name: 'Контакты',
+        image: SvgPicture.asset('lib/assets/contact-mail.svg'),
+      ),
+      ServiceCard(
+        onTap: () {
+          Navigator.pushNamed(context, PromoPage.routeName);
+        },
+        name: 'Промо',
+        image: SvgPicture.asset('lib/assets/hot-sale.svg'),
+      ),
+    ];
+
+    return cards[index];
+  }
+
   @override
   Widget build(BuildContext context) {
     _setUpdTime();
@@ -123,222 +183,124 @@ class _StartPageState extends State<StartPage> {
         ),
         SafeArea(
           child: Scaffold(
-            backgroundColor:  Colors.transparent,
+            backgroundColor: Colors.transparent,
             body: Container(
               decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors:[ Color(0x00e0cb52), Color(0xffDEC746),]
-                )
-              ),
+                  gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                    Color(0x00e0cb52),
+                    Color(0xffDEC746),
+                  ])),
               alignment: Alignment.center,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        alignment: Alignment.centerRight,
-                        margin: const EdgeInsets.only(
-                            top: 20, right: 20),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            _initData();
-                            _setUpdTime();
-                          },
-                          style: ButtonStyle(
-                            padding:
-                                MaterialStateProperty.all<EdgeInsetsGeometry>(
-                                    const EdgeInsets.all(10)),
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                                Colors.white),
-                            elevation: MaterialStateProperty.all<double>(0),
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              const Icon(
-                                Ionicons.sync_outline,
-                                color: Colors.black,
-                                size: 40,
-                              ),
-                              Container(
-                                padding: const EdgeInsets.all(5),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                      'Обновить данные',
-                                      style: StyleLibrary.text.black14,
-                                    ),
-                                    Container(
-                                      padding: const EdgeInsets.only(top: 8),
-                                      child: Text(
-                                        'Данные от: ${formatDate(updatedTime)}',
-                                        style: StyleLibrary.text.gray12,
-                                        textAlign: TextAlign.right,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      //SvgPicture.asset('lib/assets/logo.svg')
-                    ],
-                  ),
-                  if (!isLoading)
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
                     Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Container(
-                                margin: const EdgeInsets.only(left: 20, right: 7.5),
-                                child: ElevatedButton(
-                                  style: StyleLibrary.button.defaultButton,
-                                  onPressed: Provider.of<DataProvider>(context)
-                                      .getShimont
-                                      .isEmpty
-                                      ? () => {
-                                    SnackBarService.showSnackBar(
-                                        context,
-                                        "Нет данных для отображения, пожалуйста обновите данные",
-                                        true)
-                                  }
-                                      : () => {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) => const MapPage(
-                                            type: DataType.shimont),
-                                      ),
-                                    )
-                                  },
+                        Container(
+                          alignment: Alignment.centerRight,
+                          margin: const EdgeInsets.only(top: 20, right: 20),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              _initData();
+                              _setUpdTime();
+                            },
+                            style: ButtonStyle(
+                              padding:
+                                  MaterialStateProperty.all<EdgeInsetsGeometry>(
+                                      const EdgeInsets.all(10)),
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  Colors.white),
+                              elevation: MaterialStateProperty.all<double>(0),
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                const Icon(
+                                  Ionicons.sync_outline,
+                                  color: Colors.black,
+                                  size: 40,
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.all(5),
                                   child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
-                                      SvgPicture.asset('lib/assets/tire.svg'),
+                                      Text(
+                                        'Обновить данные',
+                                        style: StyleLibrary.text.black14,
+                                      ),
                                       Container(
-                                        padding: const EdgeInsets.only(top: 10),
+                                        padding: const EdgeInsets.only(top: 8),
                                         child: Text(
-                                          'Шиномонтажи',
-                                          style: StyleLibrary.text.black20,
+                                          'Данные от: ${formatDate(updatedTime)}',
+                                          style: StyleLibrary.text.gray12,
+                                          textAlign: TextAlign.right,
                                         ),
                                       ),
                                     ],
                                   ),
                                 ),
-                              ),
+                              ],
                             ),
-                            Expanded(
-                              child: Container(
-                                margin: const EdgeInsets.only(left: 7.5, right: 20),
-                                child: ElevatedButton(
-                                  style: StyleLibrary.button.defaultButton,
-                                  onPressed: Provider.of<DataProvider>(context)
-                                      .getCarWashing
-                                      .isEmpty
-                                      ? () => {
-                                    SnackBarService.showSnackBar(
-                                        context,
-                                        "Нет данных для отображения, пожалуйста обновите данные",
-                                        true)
-                                  }
-                                      : () => {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                            const MapPage(
-                                                type:
-                                                DataType.carWashing)))
-                                  },
-                                  child: Column(
-                                    children: [
-                                      SvgPicture.asset('lib/assets/car-wash.svg'),
-                                      Container(
-                                        padding: const EdgeInsets.only(top: 10),
-                                        child: Text(
-                                          'Мойки',
-                                          style: StyleLibrary.text.black20,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Container(
-                                margin: const EdgeInsets.only(
-                                    left: 20, right: 7.5, top: 10),
-                                child: ElevatedButton(
-                                  style: StyleLibrary.button.defaultButton,
-                                  onPressed: () {
-                                    Navigator.pushNamed(
-                                        context, ContactPage.routeName);
-                                  },
-                                  child: Column(
-                                    children: [
-                                      SvgPicture.asset('lib/assets/contact-mail.svg'),
-                                      Container(
-                                        padding: const EdgeInsets.only(top: 10),
-                                        child: Text(
-                                          'Контакты',
-                                          style: StyleLibrary.text.black20,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: Container(
-                                margin: const EdgeInsets.only(
-                                    left: 7.5, right: 20, top: 10),
-                                child: ElevatedButton(
-                                  style: StyleLibrary.button.defaultButton,
-                                  onPressed: () {
-                                    Navigator.pushNamed(context, PromoPage.routeName);
-                                  },
-                                  child: Column(
-                                    children: [
-                                      SvgPicture.asset('lib/assets/hot-sale.svg'),
-                                      Container(
-                                        padding: const EdgeInsets.only(top: 10),
-                                        child: Text(
-                                          'Промо',
-                                          style: StyleLibrary.text.black20,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
                       ],
                     ),
-                ],
+                    SvgPicture.asset('lib/assets/logo.svg'),
+                    if (!isLoading)
+                      Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: (MediaQuery.of(context).orientation ==
+                                  Orientation.portrait)
+                              ? Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Expanded(child: getCard(0)),
+                                        const SizedBox(width: 10),
+                                        Expanded(child: getCard(1)),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Row(
+                                      children: [
+                                        Expanded(child: getCard(2)),
+                                        const SizedBox(width: 10),
+                                        Expanded(child: getCard(3)),
+                                      ],
+                                    )
+                                  ],
+                                )
+                              : Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Expanded(child: getCard(0)),
+                                        const SizedBox(width: 10),
+                                        Expanded(child: getCard(1)),
+                                        const SizedBox(width: 10),
+                                        Expanded(child: getCard(2)),
+                                        const SizedBox(width: 10),
+                                        Expanded(child: getCard(3)),
+                                      ],
+                                    ),
+                                  ],
+                                )),
+                  ],
+                ),
               ),
             ),
           ),
