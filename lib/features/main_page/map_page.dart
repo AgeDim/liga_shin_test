@@ -40,6 +40,7 @@ class _MapPageState extends State<MapPage> {
   Timer? _debounce;
   List<SearchResponse> searchResults = [];
   PlacemarkMapObject? selectedPlacemark;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -130,6 +131,9 @@ class _MapPageState extends State<MapPage> {
       placemarks.add(userLocationMarker!);
     });
     _moveToCurrentLocation(location, 12);
+    setState(() {
+      isLoading = true;
+    });
   }
 
   Future<void> _moveToCurrentLocation(
@@ -389,22 +393,27 @@ class _MapPageState extends State<MapPage> {
       body: SafeArea(
         child: Stack(
           children: [
-            YandexMap(
-              onMapCreated: (controller) {
-                mapControllerCompleter.complete(controller);
-                controller.moveCamera(CameraUpdate.newCameraPosition(
-                    const CameraPosition(
-                        target:
-                            Point(latitude: 55.7522200, longitude: 37.6155600),
-                        zoom: 5)));
-                _addAllPointToMap();
-              },
-              scrollGesturesEnabled: true,
-              mapObjects: placemarks,
-              logoAlignment: const MapAlignment(
-                  horizontal: HorizontalAlignment.left,
-                  vertical: VerticalAlignment.bottom),
-            ),
+            if (!isLoading)
+              const Center(
+                child: CircularProgressIndicator(color: Color(0xffDEC746),),
+              ),
+            if (isLoading)
+              YandexMap(
+                onMapCreated: (controller) {
+                  controller.moveCamera(CameraUpdate.newCameraPosition(
+                      const CameraPosition(
+                          target: Point(
+                              latitude: 55.7522200, longitude: 37.6155600),
+                          zoom: 5)));
+                  _addAllPointToMap();
+                  mapControllerCompleter.complete(controller);
+                },
+                scrollGesturesEnabled: true,
+                mapObjects: placemarks,
+                logoAlignment: const MapAlignment(
+                    horizontal: HorizontalAlignment.left,
+                    vertical: VerticalAlignment.bottom),
+              ),
             Align(
               alignment: Alignment.topLeft,
               child: SingleChildScrollView(
@@ -587,7 +596,10 @@ class _MapPageState extends State<MapPage> {
                       close: close,
                       label: widget.type == DataType.shimont
                           ? 'Шиномонтаж'
-                          : 'Мойка', userLocation: AppLatLong(lat: userLocationMarker!.point.latitude, long: userLocationMarker!.point.longitude),
+                          : 'Мойка',
+                      userLocation: AppLatLong(
+                          lat: userLocationMarker!.point.latitude,
+                          long: userLocationMarker!.point.longitude),
                     )),
               )
           ],
