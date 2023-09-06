@@ -381,6 +381,7 @@ class _MapPageState extends State<MapPage> {
               : null)!;
     });
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         centerTitle: true,
         title: Text(
@@ -394,8 +395,12 @@ class _MapPageState extends State<MapPage> {
         child: Stack(
           children: [
             if (!isLoading)
-              const Center(
-                child: CircularProgressIndicator(color: Color(0xffDEC746),),
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [Image.asset('lib/assets/indicator.gif'),
+                Text('Загружаем карту, строим маршруты…', style: StyleLibrary.text.black16,)],)
               ),
             if (isLoading)
               YandexMap(
