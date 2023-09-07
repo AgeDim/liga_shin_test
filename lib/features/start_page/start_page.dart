@@ -99,7 +99,7 @@ class _StartPageState extends State<StartPage> {
             child: Image.asset('lib/assets/background.png',
                 alignment: Alignment.topCenter,
                 fit: (MediaQuery.of(context).orientation ==
-                    Orientation.portrait) ? BoxFit.fitWidth : BoxFit.fitHeight ),
+                    Orientation.portrait) ? BoxFit.fitWidth : BoxFit.cover),
           ),
           SafeArea(
             child: Padding(
@@ -136,33 +136,6 @@ class _StartPageState extends State<StartPage> {
             ),
           ),
         ],
-      ),
-    );
-
-    return Scaffold(
-      backgroundColor: const Color(0xffDEC746),
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: Image.asset('lib/assets/background.png').image,
-            alignment: Alignment.topCenter,
-            fit: BoxFit.fitWidth,
-          ),
-        ),
-        alignment: Alignment.center,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              /* UpdateCard(
-                onTap: _initData,
-              ),*/
-              // SvgPicture.asset('lib/assets/logo.svg'),
-              if (!isLoading) const ServicesGrid(),
-            ],
-          ),
-        ),
       ),
     );
   }
