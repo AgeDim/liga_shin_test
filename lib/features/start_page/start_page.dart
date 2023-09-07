@@ -91,17 +91,18 @@ class _StartPageState extends State<StartPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: const Color(0xffDEC746),
-        body: Stack(
-          children: [
-            Positioned.fill(
-              child: Image.asset('lib/assets/background.png',
-                  alignment: Alignment.topCenter,
-                  fit: BoxFit.fitWidth),
-            ),
-            Padding(
+    return Scaffold(
+      backgroundColor: const Color(0xffDEC746),
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.asset('lib/assets/background.png',
+                alignment: Alignment.topCenter,
+                fit: (MediaQuery.of(context).orientation ==
+                    Orientation.portrait) ? BoxFit.fitWidth : BoxFit.fitHeight ),
+          ),
+          SafeArea(
+            child: Padding(
               padding: const EdgeInsets.all(23),
               child: Align(
                 alignment: Alignment.topCenter,
@@ -128,13 +129,13 @@ class _StartPageState extends State<StartPage> {
                     FittedBox(
                         child: SizedBox(
                             width: MediaQuery.of(context).size.width,
-                            child: ServicesGrid())),
+                            child: const ServicesGrid())),
                   ],
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
 

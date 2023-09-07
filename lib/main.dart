@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:liga_shin_test/features/contact_page/contact_page.dart';
 import 'package:liga_shin_test/features/promo_page/promo_page.dart';
@@ -32,7 +33,20 @@ void main() async {
     storage:  StorageRepository(storage),
   );
   GetIt.instance.registerSingleton<Repository>(rep);
+  settingUpSystemUIOverlay();
   runApp(const MyApp());
+}
+
+
+
+//Перекрашивает системные UI статус бары и т.д.
+void settingUpSystemUIOverlay() {
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      systemStatusBarContrastEnforced: false,
+      systemNavigationBarColor: Colors.transparent,
+      systemNavigationBarDividerColor: Colors.transparent));
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 }
 
 class MyApp extends StatefulWidget {
