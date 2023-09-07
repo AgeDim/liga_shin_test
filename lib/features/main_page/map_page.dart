@@ -10,7 +10,6 @@ import 'package:liga_shin_test/features/main_page/widgets/selected_placemark_car
 import 'package:liga_shin_test/features/model/search_response.dart';
 import 'package:liga_shin_test/features/services/constants.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 import 'package:http/http.dart' as http;
 
@@ -41,6 +40,7 @@ class _MapPageState extends State<MapPage> {
   Timer? _debounce;
   List<SearchResponse> searchResults = [];
   PlacemarkMapObject? selectedPlacemark;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -131,6 +131,9 @@ class _MapPageState extends State<MapPage> {
       placemarks.add(userLocationMarker!);
     });
     _moveToCurrentLocation(location, 12);
+    setState(() {
+      isLoading = true;
+    });
   }
 
   Future<void> _moveToCurrentLocation(
@@ -368,16 +371,6 @@ class _MapPageState extends State<MapPage> {
     });
   }
 
-  Future<void> launchNavigation(Data st) async {
-    final url =
-        'geo:${double.parse(st.tvCoords.split(',')[0])},${double.parse(st.tvCoords.split(',')[1])}';
-    if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url));
-    } else {
-      throw 'Could not launch navigation';
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     setState(() {
@@ -388,6 +381,7 @@ class _MapPageState extends State<MapPage> {
               : null)!;
     });
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         centerTitle: true,
         title: Text(
@@ -400,22 +394,31 @@ class _MapPageState extends State<MapPage> {
       body: SafeArea(
         child: Stack(
           children: [
-            YandexMap(
-              onMapCreated: (controller) {
-                mapControllerCompleter.complete(controller);
-                controller.moveCamera(CameraUpdate.newCameraPosition(
-                    const CameraPosition(
-                        target:
-                            Point(latitude: 55.7522200, longitude: 37.6155600),
-                        zoom: 5)));
-                _addAllPointToMap();
-              },
-              scrollGesturesEnabled: true,
-              mapObjects: placemarks,
-              logoAlignment: const MapAlignment(
-                  horizontal: HorizontalAlignment.left,
-                  vertical: VerticalAlignment.bottom),
-            ),
+            if (!isLoading)
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [Image.asset('lib/assets/indicator.gif'),
+                Text('Загружаем карту, строим маршруты…', style: StyleLibrary.text.black16,)],)
+              ),
+            if (isLoading)
+              YandexMap(
+                onMapCreated: (controller) {
+                  controller.moveCamera(CameraUpdate.newCameraPosition(
+                      const CameraPosition(
+                          target: Point(
+                              latitude: 55.7522200, longitude: 37.6155600),
+                          zoom: 5)));
+                  _addAllPointToMap();
+                  mapControllerCompleter.complete(controller);
+                },
+                scrollGesturesEnabled: true,
+                mapObjects: placemarks,
+                logoAlignment: const MapAlignment(
+                    horizontal: HorizontalAlignment.left,
+                    vertical: VerticalAlignment.bottom),
+              ),
             Align(
               alignment: Alignment.topLeft,
               child: SingleChildScrollView(
@@ -596,6 +599,12 @@ class _MapPageState extends State<MapPage> {
                       point: getServiceStationByName(
                           selectedPlacemark!.mapId.value),
                       close: close,
+                      label: widget.type == DataType.shimont
+                          ? 'Шиномонтаж'
+                          : 'Мойка',
+                      userLocation: AppLatLong(
+                          lat: userLocationMarker!.point.latitude,
+                          long: userLocationMarker!.point.longitude),
                     )),
               )
           ],
