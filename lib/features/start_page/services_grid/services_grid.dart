@@ -59,9 +59,13 @@ class _ServicesGridState extends State<ServicesGrid> {
   }
 
   Widget getCard(index) {
+    bool isShimontEmpty = Provider.of<DataProvider>(context)
+        .getShimont.isEmpty;
+    bool isCarWashingEmpty = Provider.of<DataProvider>(context)
+        .getCarWashing.isEmpty;
     final cards = [
       ServiceCard(
-        onTap: context.read<DataProvider>().getShimont.isEmpty
+        onTap: isShimontEmpty
             ? () {
           SnackBarService.showSnackBar(
               context,
@@ -79,7 +83,7 @@ class _ServicesGridState extends State<ServicesGrid> {
         image: SvgPicture.asset('lib/assets/tire.svg'),
       ),
       ServiceCard(
-        onTap: context.read<DataProvider>().getCarWashing.isEmpty
+        onTap: isCarWashingEmpty
             ? () => {
           SnackBarService.showSnackBar(
               context,

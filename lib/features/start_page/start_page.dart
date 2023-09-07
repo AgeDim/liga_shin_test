@@ -98,8 +98,10 @@ class _StartPageState extends State<StartPage> {
           Positioned.fill(
             child: Image.asset('lib/assets/background.png',
                 alignment: Alignment.topCenter,
-                fit: (MediaQuery.of(context).orientation ==
-                    Orientation.portrait) ? BoxFit.fitWidth : BoxFit.cover),
+                fit:
+                    (MediaQuery.of(context).orientation == Orientation.portrait)
+                        ? BoxFit.fitWidth
+                        : BoxFit.cover),
           ),
           SafeArea(
             child: Padding(
@@ -109,27 +111,27 @@ class _StartPageState extends State<StartPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          UpdateCard(
-                            onTap: _initData,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 64,
-                      ),
-                      FittedBox(
-                          child: SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              child: SvgPicture.asset('lib/assets/logo.svg'))),
-                    ],),
-                    FittedBox(
-                        child: SizedBox(
+                    Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            UpdateCard(
+                              onTap: _initData,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 64,
+                        ),
+                        SizedBox(
                             width: MediaQuery.of(context).size.width,
-                            child: const ServicesGrid())),
+                            child: SvgPicture.asset('lib/assets/logo.svg')),
+                      ],
+                    ),
+                    SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        child: const ServicesGrid()),
                   ],
                 ),
               ),
