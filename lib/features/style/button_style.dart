@@ -9,7 +9,7 @@ class CustomButtonStyle {
         ),
       ),
       padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-          EdgeInsets.symmetric(vertical: 20)));
+          const EdgeInsets.symmetric(vertical: 20)));
   ButtonStyle? blueButton = ButtonStyle(
       elevation: MaterialStateProperty.all<double>(0),
       backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
@@ -24,7 +24,7 @@ class CustomButtonStyle {
       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
         RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(25),
-          side: BorderSide(width: 2, color: Colors.red),
+          side: const BorderSide(width: 2, color: Colors.red),
         ),
       ));
 }

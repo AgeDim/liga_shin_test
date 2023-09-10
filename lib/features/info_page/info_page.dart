@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:liga_shin_test/features/model/data.dart';
 import 'package:maps_launcher/maps_launcher.dart';
 
-import '../main_page/widgets/diamondClipper.dart';
+import '../main_page/widgets/diamond_clipper.dart';
 import '../style/style_library.dart';
 
 class InfoPage extends StatelessWidget {
@@ -100,7 +100,7 @@ class InfoPage extends StatelessWidget {
                       gradient: StyleLibrary.gradient.button,
                       borderRadius: BorderRadius.circular(10)),
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
                     constraints: const BoxConstraints(minHeight: 50.0),
                     alignment: Alignment.center,
                     child: Row(
