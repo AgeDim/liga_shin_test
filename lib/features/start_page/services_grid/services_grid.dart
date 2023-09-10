@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:liga_shin_test/features/contact_page/contact_page.dart';
+import 'package:liga_shin_test/features/main_page/main_page.dart';
 import 'package:liga_shin_test/features/promo_page/promo_page.dart';
 import 'package:provider/provider.dart';
 
-import '../../main_page/map_page.dart';
 import '../../model/data.dart';
 import '../../model/data_provider.dart';
 import '../../services/snack_bar.dart';
@@ -75,7 +75,7 @@ class _ServicesGridState extends State<ServicesGrid> {
             : () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => const MapPage(type: DataType.shimont),
+              builder: (context) => const MainPage(type: DataType.shimont),
             ),
           );
         },
@@ -95,7 +95,7 @@ class _ServicesGridState extends State<ServicesGrid> {
               context,
               MaterialPageRoute(
                   builder: (context) =>
-                  const MapPage(type: DataType.carWashing)))
+                  const MainPage(type: DataType.carWashing)))
         },
         name: 'Мойки',
         image: SvgPicture.asset('lib/assets/car-wash.svg'),
