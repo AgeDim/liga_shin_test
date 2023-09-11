@@ -9,12 +9,10 @@ import 'package:geolocator/geolocator.dart';
 import 'package:liga_shin_test/features/main_page/widgets/selected_placemark_card.dart';
 import 'package:liga_shin_test/features/model/search_response.dart';
 import 'package:liga_shin_test/features/services/constants.dart';
-import 'package:provider/provider.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 import 'package:http/http.dart' as http;
 
 import '../../model/location/app_lat_long.dart';
-import '../../model/data_provider.dart';
 import '../../model/data.dart';
 import '../../services/location_service.dart';
 import '../../style/style_library.dart';
@@ -23,12 +21,14 @@ class MapPage extends StatefulWidget {
   final DataType type;
   final void Function(Data?) updatePlacemark;
   final Data? selectedPlacemark;
+  final List<Data> points;
 
   const MapPage(
       {super.key,
       required this.type,
       required this.updatePlacemark,
-      required this.selectedPlacemark});
+      required this.selectedPlacemark,
+      required this.points});
 
   @override
   State<MapPage> createState() => _MapPageState();
@@ -41,7 +41,6 @@ class _MapPageState extends State<MapPage> {
   List<MapObject> placemarks = [];
   StreamSubscription<Position>? locationSubscription;
   PlacemarkMapObject? userLocationMarker;
-  List<Data> points = [];
   Timer? _debounce;
   List<SearchResponse> searchResults = [];
   bool isLoading = false;
@@ -188,7 +187,7 @@ class _MapPageState extends State<MapPage> {
     Point userPoint = userLocationMarker!.point;
     double minDistance = double.infinity;
     Data? nearestPlacemark;
-    for (var placemark in points) {
+    for (var placemark in widget.points) {
       Point placemarkPoint = Point(
           latitude: double.parse(placemark.tvCoords.split(',')[0]),
           longitude: double.parse(placemark.tvCoords.split(',')[1]));
@@ -315,7 +314,9 @@ class _MapPageState extends State<MapPage> {
   }
 
   Data getServiceStationByName(String pageTitle) {
-    return points.where((station) => station.pageTitle == pageTitle).first;
+    return widget.points
+        .where((station) => station.pageTitle == pageTitle)
+        .first;
   }
 
   void close() {
@@ -328,7 +329,7 @@ class _MapPageState extends State<MapPage> {
 
   void _addAllPointToMap() {
     List<PlacemarkMapObject> pl = [];
-    for (var point in points) {
+    for (var point in widget.points) {
       final placemark = PlacemarkMapObject(
           point: Point(
             latitude: double.parse(point.tvCoords.split(',')[0]),
@@ -383,13 +384,6 @@ class _MapPageState extends State<MapPage> {
 
   @override
   Widget build(BuildContext context) {
-    setState(() {
-      points = (widget.type == DataType.shimont
-          ? Provider.of<DataProvider>(context).getShimont
-          : widget.type == DataType.carWashing
-              ? Provider.of<DataProvider>(context).getCarWashing
-              : null)!;
-    });
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
