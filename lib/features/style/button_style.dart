@@ -27,4 +27,28 @@ class CustomButtonStyle {
           side: const BorderSide(width: 2, color: Colors.red),
         ),
       ));
+  ButtonStyle? white = ButtonStyle(
+      elevation: MaterialStateProperty.all<double>(0),
+      backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+        RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ));
+  ButtonStyle? yellow = ButtonStyle(
+      elevation: MaterialStateProperty.all<double>(0),
+      backgroundColor: MaterialStateProperty.all<Color>(const Color(0xffdec746)),
+      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+        RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ));
+  ButtonStyle? red = ButtonStyle(
+      elevation: MaterialStateProperty.all<double>(0),
+      backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
+      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+        RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ));
 }

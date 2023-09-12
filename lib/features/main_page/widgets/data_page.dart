@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:liga_shin_test/features/model/location/app_lat_long.dart';
 import 'package:maps_launcher/maps_launcher.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../info_page/info_page.dart';
 import '../../model/data.dart';
+import '../../services/location_service.dart';
 import '../../style/style_library.dart';
 import 'diamond_clipper.dart';
 
@@ -24,12 +27,45 @@ class DataPage extends StatefulWidget {
 
 class _DataPageState extends State<DataPage>
     with AutomaticKeepAliveClientMixin<DataPage> {
+  int distance = 0;
+  late AppLatLong userLocation;
+
   Future<void> _makePhoneCall(String phoneNumber) async {
     final Uri launchUri = Uri(
       scheme: 'tel',
       path: phoneNumber,
     );
     await launchUrl(launchUri);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getUserLocation();
+  }
+
+  void getUserLocation() {
+    try {
+      setState(() async {
+        userLocation = await LocationService().getCurrentLocation();
+      });
+    } catch (_) {
+      setState(() {
+        userLocation = const MoscowLocation();
+      });
+    }
+  }
+
+  int calculateDistance(double lat, double long) {
+    double distance = 0;
+    distance = Geolocator.distanceBetween(
+      userLocation.lat,
+      userLocation.long,
+      lat,
+      long,
+    );
+
+    return distance.toInt();
   }
 
   @override
@@ -53,6 +89,11 @@ class _DataPageState extends State<DataPage>
                               label: widget.type == DataType.shimont
                                   ? 'Шиномонтаж'
                                   : 'Мойка',
+                              distance: calculateDistance(
+                                  double.parse(widget.points[index].tvCoords
+                                      .split(',')[0]),
+                                  double.parse(widget.points[index].tvCoords
+                                      .split(',')[1])),
                             )));
               },
               child: Container(

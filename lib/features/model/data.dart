@@ -52,6 +52,11 @@ class Data {
       'tv.phonetv': tvPhonetv,
     };
   }
+
+  @override
+  String toString() {
+    return 'Data{id: $id, pageTitle: $pageTitle, content: $content, image: $image, thumb: $thumb, tvAddress: $tvAddress, tvCoords: $tvCoords, tvTrass: $tvTrass, tvDistance: $tvDistance, tvPhonetv: $tvPhonetv}';
+  }
 }
 
 enum DataType { shimont, carWashing, lastUpdate }

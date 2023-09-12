@@ -102,6 +102,7 @@ class SelectedPlacemarkCard extends StatelessWidget {
                                 builder: (context) => InfoPage(
                                       point: point,
                                       label: label,
+                                  distance: distance,
                                     )));
                       },
                       style: ButtonStyle(
