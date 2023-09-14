@@ -72,9 +72,12 @@ class _DataPageState extends State<DataPage>
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      body: SingleChildScrollView(
+      body: Scrollbar(
+        thumbVisibility: true,
+        thickness: 10,
+        radius: const Radius.circular(10),
+        interactive: true,
         child: ListView.builder(
-          physics: const NeverScrollableScrollPhysics(),
           padding: const EdgeInsets.all(8),
           itemCount: widget.points.length,
           shrinkWrap: true,

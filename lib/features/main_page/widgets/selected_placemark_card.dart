@@ -79,7 +79,7 @@ class SelectedPlacemarkCard extends StatelessWidget {
                         borderRadius: BorderRadius.all(Radius.circular(25)),
                       ),
                       child: Text(
-                        '$distance м от Вас',
+                        '${distance} м от Вас',
                         style: const TextStyle(color: Colors.white),
                       ),
                     ),

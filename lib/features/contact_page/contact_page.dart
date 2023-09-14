@@ -43,7 +43,7 @@ class ContactPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:  AppBar(
+      appBar: AppBar(
         centerTitle: true,
         title: Text(
           'Контакты',
@@ -51,6 +51,7 @@ class ContactPage extends StatelessWidget {
         ),
         backgroundColor: const Color(0xffDEC746),
         iconTheme: const IconThemeData(color: Colors.black),
+        elevation: 0,
       ),
       body: SafeArea(
         child: Container(

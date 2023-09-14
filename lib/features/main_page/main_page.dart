@@ -36,7 +36,6 @@ class _MainPageState extends State<MainPage>
     });
   }
 
-
   @override
   void dispose() {
     _tabController.dispose();
@@ -59,6 +58,7 @@ class _MainPageState extends State<MainPage>
           widget.type == DataType.shimont ? 'Шиномонтажи' : 'Мойки',
           style: StyleLibrary.text.black16,
         ),
+        elevation: 0,
         backgroundColor: const Color(0xffDEC746),
         iconTheme: const IconThemeData(color: Colors.black),
       ),

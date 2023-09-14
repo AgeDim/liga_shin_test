@@ -44,6 +44,7 @@ class _MapPageState extends State<MapPage> {
   Timer? _debounce;
   List<SearchResponse> searchResults = [];
   bool isLoading = false;
+  int _staticDistance = 0;
 
   @override
   void initState() {
@@ -204,10 +205,13 @@ class _MapPageState extends State<MapPage> {
         nearestPlacemark = placemark;
       }
     }
+    _staticDistance = calculateDistance(
+        double.parse(nearestPlacemark!.tvCoords.split(',')[0]),
+        double.parse(nearestPlacemark.tvCoords.split(',')[1]));
     widget.updatePlacemark(nearestPlacemark);
     _moveToCurrentLocation(
         AppLatLong(
-            lat: double.parse(nearestPlacemark!.tvCoords.split(',')[0]),
+            lat: double.parse(nearestPlacemark.tvCoords.split(',')[0]),
             long: double.parse(nearestPlacemark.tvCoords.split(',')[1])),
         14);
   }
@@ -336,6 +340,9 @@ class _MapPageState extends State<MapPage> {
             longitude: double.parse(point.tvCoords.split(',')[1]),
           ),
           onTap: (placemark, point) {
+            _staticDistance = calculateDistance(
+                placemark.point.latitude, placemark.point.longitude);
+            print(_staticDistance);
             widget.updatePlacemark(
                 getServiceStationByName(placemark.mapId.value));
             Data temp = getServiceStationByName(placemark.mapId.value);
@@ -626,11 +633,7 @@ class _MapPageState extends State<MapPage> {
                             label: widget.type == DataType.shimont
                                 ? 'Шиномонтаж'
                                 : 'Мойка',
-                            distance: calculateDistance(
-                                double.parse(widget.selectedPlacemark!.tvCoords
-                                    .split(',')[0]),
-                                double.parse(widget.selectedPlacemark!.tvCoords
-                                    .split(',')[1])),
+                            distance: _staticDistance,
                           )),
                     )
                 ],

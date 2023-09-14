@@ -84,6 +84,7 @@ class _PromoPageState extends State<PromoPage> {
           "Промо",
           style: StyleLibrary.text.black16,
         ),
+        elevation: 0,
         iconTheme: const IconThemeData(color: Colors.black),
       ),
       body: SafeArea(

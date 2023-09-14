@@ -6,6 +6,21 @@ class FontStyle {
       fontSize: 14,
       color: Colors.black,
       fontWeight: FontWeight.normal);
+  TextStyle black14bold = const TextStyle(
+      fontFamily: 'Montserrat',
+      fontSize: 14,
+      color: Colors.black,
+      fontWeight: FontWeight.bold);
+  TextStyle black15 = const TextStyle(
+      fontFamily: 'Montserrat',
+      fontSize: 15,
+      color: Colors.black,
+      fontWeight: FontWeight.bold);
+  TextStyle black25 = const TextStyle(
+      fontFamily: 'Montserrat',
+      fontSize: 25,
+      color: Colors.black,
+      fontWeight: FontWeight.normal);
   TextStyle black16 = const TextStyle(
       fontFamily: 'Montserrat',
       fontSize: 16,
@@ -32,6 +47,8 @@ class FontStyle {
       color: Colors.black,
       fontWeight: FontWeight.normal);
   TextStyle white16 = const TextStyle(
+      fontFamily: 'Montserrat', fontSize: 16, color: Colors.white);
+  TextStyle white15 = const TextStyle(
       fontFamily: 'Montserrat', fontSize: 16, color: Colors.white);
   TextStyle white18 = const TextStyle(
       fontFamily: 'Montserrat', fontSize: 18, color: Colors.white);
