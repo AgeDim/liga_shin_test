@@ -98,27 +98,28 @@ class _InfoMapWidgetState extends State<InfoMapWidget> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Container(
-                            height: 30,
                             margin: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
                                 gradient: StyleLibrary.gradient.button),
                             child: ElevatedButton(
-                                onPressed: () {
-                                  MapsLauncher.launchCoordinates(
-                                      double.parse(
-                                          widget.point.tvCoords.split(',')[0]),
-                                      double.parse(
-                                          widget.point.tvCoords.split(',')[1]));
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.transparent,
-                                  shadowColor: Colors.transparent,
-                                ),
+                              style: StyleLibrary.button.red,
+                              onPressed: () {
+                                MapsLauncher.launchCoordinates(
+                                    double.parse(
+                                        widget.point.tvCoords.split(',')[0]),
+                                    double.parse(
+                                        widget.point.tvCoords.split(',')[1]));
+                              },
+                              child: Container(
+                                padding:
+                                const EdgeInsets.symmetric(vertical: 15),
                                 child: Text(
-                                  'Маршрут',
-                                  style: StyleLibrary.text.white16,
-                                )),
+                                  'Построить маршрут',
+                                  style: StyleLibrary.text.white15,
+                                ),
+                              ),
+                            ),
                           ),
                         ],
                       ),
