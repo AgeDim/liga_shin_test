@@ -342,7 +342,6 @@ class _MapPageState extends State<MapPage> {
           onTap: (placemark, point) {
             _staticDistance = calculateDistance(
                 placemark.point.latitude, placemark.point.longitude);
-            print(_staticDistance);
             widget.updatePlacemark(
                 getServiceStationByName(placemark.mapId.value));
             Data temp = getServiceStationByName(placemark.mapId.value);
@@ -391,6 +390,14 @@ class _MapPageState extends State<MapPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.selectedPlacemark != null) {
+      setState(() {
+        _staticDistance = calculateDistance(
+            double.parse(widget.selectedPlacemark!.tvCoords.split(',')[0]),
+            double.parse(widget.selectedPlacemark!.tvCoords.split(',')[1]));
+      });
+    }
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
