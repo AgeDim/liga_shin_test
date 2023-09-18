@@ -164,6 +164,7 @@ class _InfoPageState extends State<InfoPage> {
             hasScrollBody: false,
             fillOverscroll: true,
             child: SingleChildScrollView(
+              physics: const ClampingScrollPhysics(),
               child: Container(
                 decoration: const BoxDecoration(color: Color(0xffDEC746)),
                 child: Container(
