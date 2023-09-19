@@ -55,7 +55,7 @@ class ContactPage extends StatelessWidget {
       ),
       body: SafeArea(
         child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 20),
+          margin: const EdgeInsets.symmetric(horizontal: 10),
           child: Column(
             children: [
               Container(
@@ -66,176 +66,174 @@ class ContactPage extends StatelessWidget {
                   'Свяжитесь с нами любым удобным для Вас способом',
                   style: TextStyle(color: Colors.black, fontSize: 15),
                   textAlign: TextAlign.center,
+                  overflow: TextOverflow.clip,
                 ),
               ),
-              Container(
-                alignment: Alignment.centerLeft,
-                child: Table(
-                  defaultColumnWidth: const IntrinsicColumnWidth(),
-                  children: [
-                    TableRow(
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
                       children: [
-                        const TableCell(
-                          verticalAlignment: TableCellVerticalAlignment.middle,
-                          child: Icon(Icons.phone),
-                        ),
-                        TableCell(
-                          verticalAlignment: TableCellVerticalAlignment.middle,
-                          child: Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 10),
-                            child: const Text(
-                              'Телефон',
-                              style: TextStyle(fontSize: 15),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                        TableCell(
-                          verticalAlignment: TableCellVerticalAlignment.middle,
-                          child: Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 10),
-                            child: GestureDetector(
-                              onTap: () {
-                                _makePhoneCall(Constants.companyPhone);
-                              },
-                              child: const Text(
-                                Constants.companyPhone,
-                                style: TextStyle(
-                                    color: Colors.red,
-                                    decoration: TextDecoration.underline,
-                                    fontSize: 15),
+                        Row(
+                          children: [
+                            const Expanded(flex: 2, child: Icon(Icons.phone)),
+                            Expanded(
+                              flex: 4,
+                              child: Container(
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 5, vertical: 5),
+                                child: const Text(
+                                  'Телефон',
+                                  style: TextStyle(fontSize: 15),
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    TableRow(
-                      children: [
-                        const TableCell(
-                          verticalAlignment: TableCellVerticalAlignment.middle,
-                          child: Icon(Icons.email),
-                        ),
-                        TableCell(
-                          verticalAlignment: TableCellVerticalAlignment.middle,
-                          child: Container(
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 20),
-                            child: const Text(
-                              'Email',
-                              style: TextStyle(fontSize: 15),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                        TableCell(
-                          child: Container(
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 20),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                GestureDetector(
+                            Expanded(
+                              flex: 6,
+                              child: Container(
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 5, vertical: 5),
+                                child: GestureDetector(
                                   onTap: () {
-                                    _sendEmail(Constants.companyMail);
+                                    _makePhoneCall(Constants.companyPhone);
                                   },
                                   child: const Text(
-                                    Constants.companyMail,
+                                    Constants.companyPhone,
                                     style: TextStyle(
                                         color: Colors.red,
                                         decoration: TextDecoration.underline,
                                         fontSize: 15),
                                   ),
                                 ),
-                                GestureDetector(
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            const Expanded(flex: 1, child: Icon(Icons.email)),
+                            Expanded(
+                              flex: 2,
+                              child: Container(
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 5, vertical: 5),
+                                child: const Text(
+                                  'Email',
+                                  style: TextStyle(fontSize: 15),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 3,
+                              child: Container(
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 5, vertical: 5),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        _sendEmail(Constants.companyMail);
+                                      },
+                                      child: const Text(
+                                        Constants.companyMail,
+                                        style: TextStyle(
+                                            color: Colors.red,
+                                            decoration:
+                                                TextDecoration.underline,
+                                            fontSize: 15),
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        _sendEmail(Constants.secondCompanyMail);
+                                      },
+                                      child: const Text(
+                                        Constants.secondCompanyMail,
+                                        style: TextStyle(
+                                            color: Colors.red,
+                                            decoration:
+                                                TextDecoration.underline,
+                                            fontSize: 15),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            const Expanded(flex: 2, child: Icon(Icons.map)),
+                            Expanded(
+                              flex: 4,
+                              child: Container(
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 5, vertical: 5),
+                                child: const Text(
+                                  'Адрес',
+                                  style: TextStyle(fontSize: 15),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 6,
+                              child: Container(
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 5, vertical: 5),
+                                  child: const Text(
+                                    Constants.address,
+                                    style: TextStyle(fontSize: 15),
+                                  )),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            const Expanded(flex: 2, child: Icon(Icons.public)),
+                            Expanded(
+                              flex: 4,
+                              child: Container(
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 5, vertical: 5),
+                                child: const Text(
+                                  'Сайт',
+                                  style: TextStyle(fontSize: 15),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 6,
+                              child: Container(
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 5, vertical: 5),
+                                child: GestureDetector(
                                   onTap: () {
-                                    _sendEmail(Constants.secondCompanyMail);
+                                    _openWebsite(Constants.webSiteAddress);
                                   },
                                   child: const Text(
-                                    Constants.secondCompanyMail,
+                                    Constants.webSiteAddress,
                                     style: TextStyle(
                                         color: Colors.red,
                                         decoration: TextDecoration.underline,
                                         fontSize: 15),
                                   ),
                                 ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    TableRow(
-                      children: [
-                        const TableCell(
-                          verticalAlignment: TableCellVerticalAlignment.middle,
-                          child: Icon(Icons.map),
-                        ),
-                        TableCell(
-                          verticalAlignment: TableCellVerticalAlignment.middle,
-                          child: Container(
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 20),
-                            child: const Text(
-                              'Адрес',
-                              style: TextStyle(fontSize: 15),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                        TableCell(
-                          child: Container(
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 20),
-                              child: const Text(
-                                Constants.address,
-                                style: TextStyle(fontSize: 15),
-                              )),
-                        ),
-                      ],
-                    ),
-                    TableRow(
-                      children: [
-                        const TableCell(
-                          verticalAlignment: TableCellVerticalAlignment.middle,
-                          child: Icon(Icons.public),
-                        ),
-                        TableCell(
-                          verticalAlignment: TableCellVerticalAlignment.middle,
-                          child: Container(
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 20),
-                            child: const Text(
-                              'Сайт',
-                              style: TextStyle(fontSize: 15),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                        TableCell(
-                          child: Container(
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 20),
-                            child: GestureDetector(
-                              onTap: () {
-                                _openWebsite(Constants.webSiteAddress);
-                              },
-                              child: const Text(
-                                Constants.webSiteAddress,
-                                style: TextStyle(
-                                    color: Colors.red,
-                                    decoration: TextDecoration.underline,
-                                    fontSize: 15),
                               ),
                             ),
-                          ),
-                        ),
+                          ],
+                        )
                       ],
                     ),
-                  ],
-                ),
-              )
+                  ),
+                ],
+              ),
             ],
           ),
         ),
