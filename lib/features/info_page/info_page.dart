@@ -67,7 +67,8 @@ class _InfoPageState extends State<InfoPage> {
       body: CustomScrollView(
         slivers: [
           SliverToBoxAdapter(
-            child: SizedBox(
+            child: Container(
+              decoration: const BoxDecoration(color: Color(0xffDEC746)),
               height: MediaQuery.of(context).size.width / 1.8,
               child: Stack(
                 children: [
@@ -161,178 +162,183 @@ class _InfoPageState extends State<InfoPage> {
           ),
           SliverFillRemaining(
             hasScrollBody: false,
+            fillOverscroll: true,
             child: SingleChildScrollView(
+              physics: const ClampingScrollPhysics(),
               child: Container(
-                decoration: const BoxDecoration(color: Colors.white),
-                padding:
-                    const EdgeInsets.symmetric(vertical: 30, horizontal: 25),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        copyToClipboard(widget.point.tvAddress);
-                        SnackBarService.showSnackBar(
-                            context, 'Ваш текст скопирован', false);
-                      },
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.all(5),
-                                padding: const EdgeInsets.only(right: 5),
-                                child: Text(
-                                  'Адрес',
-                                  style: StyleLibrary.text.black14bold,
+                decoration: const BoxDecoration(color: Color(0xffDEC746)),
+                child: Container(
+                  decoration: const BoxDecoration(color: Colors.white),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 30, horizontal: 25),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          copyToClipboard(widget.point.tvAddress);
+                          SnackBarService.showSnackBar(
+                              context, 'Ваш текст скопирован', false);
+                        },
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.all(5),
+                                  padding: const EdgeInsets.only(right: 5),
+                                  child: Text(
+                                    'Адрес',
+                                    style: StyleLibrary.text.black14bold,
+                                  ),
                                 ),
-                              ),
-                              const Icon(Icons.copy)
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Flexible(
-                                child: Container(
+                                const Icon(Icons.copy)
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Flexible(
+                                  child: Container(
+                                    margin: const EdgeInsets.only(
+                                        bottom: 17, top: 5, left: 5),
+                                    width:
+                                        MediaQuery.of(context).size.width - 100,
+                                    child: Text(
+                                      widget.point.tvAddress,
+                                      style: StyleLibrary.text.black14,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.all(5),
+                        child: Text(
+                          'Трасса',
+                          style: StyleLibrary.text.black14bold,
+                        ),
+                      ),
+                      Container(
+                        margin:
+                            const EdgeInsets.only(bottom: 17, top: 5, left: 5),
+                        child: Text(
+                          widget.point.tvTrass!,
+                          style: StyleLibrary.text.black14,
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          copyToClipboard(widget.point.tvCoords);
+                          SnackBarService.showSnackBar(
+                              context, 'Ваш текст скопирован', false);
+                        },
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.all(5),
+                                  padding: const EdgeInsets.only(right: 5),
+                                  child: Text(
+                                    'Координаты',
+                                    style: StyleLibrary.text.black14bold,
+                                  ),
+                                ),
+                                const Icon(Icons.copy)
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Container(
                                   margin: const EdgeInsets.only(
                                       bottom: 17, top: 5, left: 5),
-                                  width:
-                                      MediaQuery.of(context).size.width - 100,
-                                  child: Text(
-                                    widget.point.tvAddress,
-                                    style: StyleLibrary.text.black14,
-                                  ),
+                                  child: Text(widget.point.tvCoords,
+                                      style: StyleLibrary.text.black14),
                                 ),
-                              ),
-                            ],
-                          )
-                        ],
+                              ],
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.all(5),
-                      child: Text(
-                        'Трасса',
-                        style: StyleLibrary.text.black14bold,
+                      Container(
+                        margin: const EdgeInsets.all(5),
+                        child: Text(
+                          'Расстояние до точки',
+                          style: StyleLibrary.text.black14bold,
+                        ),
                       ),
-                    ),
-                    Container(
-                      margin:
-                          const EdgeInsets.only(bottom: 17, top: 5, left: 5),
-                      child: Text(
-                        widget.point.tvTrass!,
-                        style: StyleLibrary.text.black14,
+                      Container(
+                        margin:
+                            const EdgeInsets.only(bottom: 17, top: 5, left: 5),
+                        child: Text(
+                          '${widget.distance} метров',
+                          style: StyleLibrary.text.black14,
+                        ),
                       ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        copyToClipboard(widget.point.tvCoords);
-                        SnackBarService.showSnackBar(
-                            context, 'Ваш текст скопирован', false);
-                      },
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.all(5),
-                                padding: const EdgeInsets.only(right: 5),
-                                child: Text(
-                                  'Координаты',
-                                  style: StyleLibrary.text.black14bold,
-                                ),
-                              ),
-                              const Icon(Icons.copy)
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.only(
-                                    bottom: 17, top: 5, left: 5),
-                                child: Text(widget.point.tvCoords,
-                                    style: StyleLibrary.text.black14),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.all(5),
-                      child: Text(
-                        'Расстояние до точки',
-                        style: StyleLibrary.text.black14bold,
-                      ),
-                    ),
-                    Container(
-                      margin:
-                          const EdgeInsets.only(bottom: 17, top: 5, left: 5),
-                      child: Text(
-                        '${widget.distance} метров',
-                        style: StyleLibrary.text.black14,
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            child: Container(
-                              margin:
-                                  const EdgeInsets.symmetric(horizontal: 10),
-                              child: ElevatedButton(
-                                style: StyleLibrary.button.yellow,
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Container(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 15),
-                                  child: Text(
-                                    'Назад',
-                                    style: StyleLibrary.text.black15,
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Expanded(
+                              child: Container(
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 10),
+                                child: ElevatedButton(
+                                  style: StyleLibrary.button.yellow,
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 15),
+                                    child: Text(
+                                      'Назад',
+                                      style: StyleLibrary.text.black15,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                          Expanded(
-                            child: Container(
-                              margin:
-                                  const EdgeInsets.symmetric(horizontal: 10),
-                              child: ElevatedButton(
-                                style: StyleLibrary.button.red,
-                                onPressed: () {
-                                  MapsLauncher.launchCoordinates(
-                                      double.parse(
-                                          widget.point.tvCoords.split(',')[0]),
-                                      double.parse(
-                                          widget.point.tvCoords.split(',')[1]));
-                                },
-                                child: Container(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 15),
-                                  child: Text(
-                                    'Маршрут',
-                                    style: StyleLibrary.text.white15,
+                            Expanded(
+                              child: Container(
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 10),
+                                child: ElevatedButton(
+                                  style: StyleLibrary.button.red,
+                                  onPressed: () {
+                                    MapsLauncher.launchCoordinates(
+                                        double.parse(widget.point.tvCoords
+                                            .split(',')[0]),
+                                        double.parse(widget.point.tvCoords
+                                            .split(',')[1]));
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 15),
+                                    child: Text(
+                                      'Маршрут',
+                                      style: StyleLibrary.text.white15,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
