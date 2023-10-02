@@ -26,7 +26,7 @@
         android:usesCleartextTraffic="true"
         android:roundIcon="@mipmap/round_launcher"
         android:icon="@mipmap/ic_launcher"
-        android:label="liga_shin_test">
+        android:label="Шинная Лига - Легковая">
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
