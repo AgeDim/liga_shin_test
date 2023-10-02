@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get_it/get_it.dart';
 import 'package:liga_shin_test/features/contact_page/contact_page.dart';
 import 'package:liga_shin_test/features/promo_page/promo_page.dart';
@@ -16,13 +17,10 @@ import 'data/storage/pref/pref.dart';
 import 'data/storage/storage.dart';
 import 'features/model/data_provider.dart';
 
-
 void main() async {
   await initializeDateFormatting('ru', null);
   WidgetsFlutterBinding.ensureInitialized();
-  final Storage storage = Pref(
-      await SharedPreferences.getInstance()
-  );
+  final Storage storage = Pref(await SharedPreferences.getInstance());
 
   final Repository rep = AutoShinLigaRepository(
     remote: RemoteRepository(
@@ -30,14 +28,12 @@ void main() async {
       carwashingEndPoint: '/carwashing.json',
       shimontEndPoint: '/shimont.json',
     ),
-    storage:  StorageRepository(storage),
+    storage: StorageRepository(storage),
   );
   GetIt.instance.registerSingleton<Repository>(rep);
   settingUpSystemUIOverlay();
   runApp(const MyApp());
 }
-
-
 
 //Перекрашивает системные UI статус бары и т.д.
 void settingUpSystemUIOverlay() {
@@ -68,6 +64,12 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (_) => DataProvider()),
       ],
       child: MaterialApp(
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [Locale('ru')],
         debugShowCheckedModeBanner: false,
         initialRoute: StartPage.routeName,
         routes: {
